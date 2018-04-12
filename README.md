@@ -1,1 +1,1 @@
-# WHS-Announcement-System.github.io
+# whssp.github.io
