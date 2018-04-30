@@ -14,7 +14,6 @@
     top: 0px;
     right: 0px;
     width: 50%;
-    height: 300px;
 }
 </style>
 </head>
@@ -30,6 +29,12 @@
         message: 'Hello Vue!'
       }
     })
+    
+    function setHeight() {
+      var div = document.getElementById('iframe1');
+      var height = div.getAttribute('width') * 4/3;
+      div.setAttribute('style',height);
+    }
   </script>
 </body>
 </html>
