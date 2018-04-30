@@ -32,7 +32,7 @@
     setHeight();
     function setHeight() {
       var div = document.getElementById("iframe1");
-      var height = div.style.width + "px";
+      var height = document.getElementById("iframe1").style.width + "px";
       alert(height);
       div.style.height = height;
     }
