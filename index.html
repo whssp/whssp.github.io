@@ -4,12 +4,25 @@
 <head>
   <title>My first Vue app</title>
   <script src="https://unpkg.com/vue"></script>
+  <style type="text/css">
+  body {
+    margin: 0;
+    overflow: hidden;
+  }
+  #iframe1 {
+    position:absolute;
+    left: 0px;
+    width: 100%;
+    top: 0px;
+    height: 100%;
+}
+</style>
 </head>
 <body>
   <div id="app">
     {{ message }}
   </div>
-  <iframe src="https://docs.google.com/presentation/d/1dFXy0tZORfac0Gb7vf9l90tI4F5IgjHFhdnJj7-jz9Q/embed?start=true&amp;loop=true&amp;delayms=3000" width="1280" height="960" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+  <iframe id="iframe1" src="https://docs.google.com/presentation/d/1dFXy0tZORfac0Gb7vf9l90tI4F5IgjHFhdnJj7-jz9Q/embed?start=true&amp;loop=true&amp;delayms=3000" width="1280" height="960" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
   <script>
     var app = new Vue({
       el: '#app',
