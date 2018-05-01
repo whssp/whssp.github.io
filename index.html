@@ -13,7 +13,6 @@
     position:fixed;
     top: 0px;
     right: 0px;
-    width: 50%;
 }
 </style>
 </head>
@@ -31,8 +30,11 @@
     })
     setHeight();
     function setHeight() {
+      var w = window.innerWidth();
+      var h = window.innerHeight();
       var div = document.getElementById("iframe1");
-      var height = document.getElementById("iframe1").style.width + "px";
+      var height = w*3/8 + "px";
+      var width = w/2 + "px";
       alert(height);
       div.style.height = height;
     }
