@@ -2,42 +2,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My first Vue app</title>
-  <script src="https://unpkg.com/vue"></script>
-  <style type="text/css">
-  body {
-    margin: 0;
-    overflow: hidden;
-  }
-  #iframe1 {
-    position:fixed;
-    top: 0px;
-    right: 0px;
-}
-</style>
+    <title>My first Vue app</title>
+    <script src="https://unpkg.com/vue"></script>
+    <style type="text/css">
+        body {
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-  <div id="app">
-    {{ message }}
-  </div>
-  <iframe id="iframe1" src="https://docs.google.com/presentation/d/1dFXy0tZORfac0Gb7vf9l90tI4F5IgjHFhdnJj7-jz9Q/embed?start=true&amp;loop=true&amp;delayms=3000" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-  <script>
-    var app = new Vue({
-      el: '#app',
-      data: {
-        message: 'Hello Vue!'
-      }
-    })
-    setHeight();
-    function setHeight() {
-      var w = window.innerWidth;
-      var h = window.innerHeight;
-      var div = document.getElementById("iframe1");
-      var height = w*3/8 + "px";
-      var width = w/2 + "px";
-      alert(height);
-      div.style.height = height;
-    }
-  </script>
+    <div id="leftstack" style="float: left; width: 20%; height: 100%; background-color: red">
+        <img src="https://wellesleyps.org/athletics/wp-content/uploads/sites/9/2016/07/wps-raiders-logo-100sq.png" style="width:100%">
+    </div>
+    <div id="rightstack" style="float: right; width: 80%; height: 100%; background-color: green">
+        <div id="main" style="float: top; width: 100%; height: 90%; background-color: tan"></div>
+        <div id="sports" style="float: bottom; width: 100%; height: 10%; background-color: green"></div>
+    </div>
+
 </body>
 </html>

@@ -1,0 +1,6 @@
+# Idea Files
+.idea/
+vcs.xml
+*.ipr
+*.iml
+*.iws
