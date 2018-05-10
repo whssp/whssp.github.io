@@ -4,8 +4,15 @@ function updateTime() {
     var now = new Date();
 
     var hours = now.getHours();
+    var hour = hours % 12;
+    if (hour === 0) hour = 12;
     var minutes = now.getMinutes();
-    var time = hours + ":" + minutes;
+    var half = "AM";
+    if (hours > 11) half = "PM";
+    if (minutes.toString().length == 1) {
+        minutes = "0" + minutes;
+    }
+    var time = hour + ":" + minutes + " " + half;
 
     var timeElement = document.getElementById("time");
     timeElement.innerHTML = time;
