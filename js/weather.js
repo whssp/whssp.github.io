@@ -6,7 +6,6 @@ function updateWeather() {
     req.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=4954738&units=imperial&appid=a55ffcf3f9495731e0224158eb59cfe2", true);
     req.send();
 
-    req.addEventListener("readystatechange", processRequest, false);
     req.onreadystatechange = processRequest;
 
     function processRequest(e) {
@@ -14,15 +13,18 @@ function updateWeather() {
             var response = JSON.parse(req.responseText);
 
             var minmax = document.getElementById("minmax");
-            minmax.innerHTML =  Math.round(response.main.temp_min) + "&deg; / " + Math.round(response.main.temp_max) + "&deg;"
+            minmax.innerHTML =  Math.round(response.main.temp_min) + "&deg; / " + Math.round(response.main.temp_max) + "&deg;";
 
             var currentTemp = document.getElementById("currenttemp");
-            currentTemp.innerHTML = Math.round(response.main.temp) + "&deg;"
+            currentTemp.innerHTML = Math.round(response.main.temp) + "&deg;";
 
             var currentimage = document.getElementById("currentimage");
             currentimage.className = "wi " + icons[owmConditions.indexOf(response.weather[0].icon)];
         }
-    }}
+    }
+}
 
-updateWeather();
-setInterval(updateWeather, 60 * 1000);
+window.addEventListener("load",function() {
+    updateWeather();
+    setInterval(updateWeather, 60 * 1000);
+});
