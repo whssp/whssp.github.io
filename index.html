@@ -40,8 +40,8 @@
             <div id="currentimage" style="height:75%; text-align: center;">
                 <i class="wi wi-night-sleet" style="font-size: 10em; margin-top: 0.1em;"></i>
             </div>
-            <div id="currenttemp" style="position: absolute; left: 0; width: 20%; top: 80%; text-align: center">
-                <div style="color: white; font-size: 5em; margin-left: 5%">70&deg;</div>
+            <div id="currenttempholder" style="position: absolute; left: 0; width: 20%; top: 80%; text-align: center">
+                <div id ="currenttemp" style="color: white; font-size: 5em; margin-left: 5%">50&deg;</div>
             </div>
             <div id="minmax" style="text-align: center; font-size: 3em; margin-left: auto; margin-right: auto; color: white; font-family: sans-serif">50&deg;/50&deg;</div>
             <script>
@@ -56,10 +56,12 @@
                     function processRequest(e) {
                         if (req.readyState == 4 && req.status == 200) {
                             var response = JSON.parse(req.responseText);
+
                             var minmax = document.getElementById("minmax");
                             minmax.innerHTML =  Math.round(response.main.temp_min) + "&deg; / " + Math.round(response.main.temp_max) + "&deg;"
-                            var weathericon = document.getElementById("weathericon");
-                            weathericon.src = "http://openweathermap.org/img/w/" + response.weather[0].icon + ".png";
+
+                            var currentTemp = document.getElementById("currenttemp");
+                            currentTemp.innerHTML = Math.round(response.main.temp) + "&deg;"
                         }
                     }}
 
