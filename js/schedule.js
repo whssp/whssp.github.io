@@ -1,4 +1,13 @@
 var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"]
+var colors = [
+    ["orange", "advisory", "yellow", "green", "red", "blue"],
+    ["yellow", "advisory", "orange", "tan", "red", "purple"],
+    ["green", "advisory", "orange", "tan", "purple", "blue"],
+    ["tan", "advisory", "yellow", "green", "red", "blue"],
+    ["red", "advisory", "orange", "yellow", "purple", "blue"],
+    ["purple", "advisory", "orange", "green", "tan", "red"],
+    ["blue", "advisory", "yellow", "green", "tan", "purple"],
+]
 
 function updateTime() {
     var now = new Date();
