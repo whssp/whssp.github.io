@@ -10,10 +10,14 @@
             margin: 0;
         }
 
-        #main, #logo, #weather {
+        #main {
             -webkit-box-shadow: inset 0 0 2.5em #595959;
             -moz-box-shadow: inset 0 0 2.5em #595959;
             box-shadow: inset 0 0 2.5em #595959;
+        }
+
+        .gradient{
+            background: radial-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.20));
         }
 
         img {
@@ -30,13 +34,13 @@
 </head>
 <body>
     <div id="leftstack" style="float: left; width: 20%; height: 100%; background-color: red">
-        <div id="logo" style="height:17.5%">
+        <div id="logo" class="gradient" style="height:17.5%">
             <img src="img/raider-logo.png">
         </div>
         <div id="time" style="width: 100%; height: 25%; background-color: darkgray"></div>
-        <div id="currentblock" style="width: 100%; height:15%; background-color: blue"></div>
-        <div id="nextblock" style="width:100%; height: 15%; background-color: lightgray"></div>
-        <div id="weather" style="width: 100%; height: 27.5%; background-color: deepskyblue">
+        <div id="currentblock" class="gradient" style="width: 100%; height:15%; background-color: blue"></div>
+        <div id="nextblock" class="gradient" style="width:100%; height: 15%; background-color: lightgray"></div>
+        <div id="weather" class="gradient" style="width: 100%; height: 27.5%; background-color: deepskyblue">
             <div id="currentimage" style="height:75%; text-align: center;">
                 <i class="wi wi-night-sleet" style="font-size: 10em; margin-top: 0.1em;"></i>
             </div>
