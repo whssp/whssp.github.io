@@ -10,6 +10,17 @@ function updateTime() {
     var timeElement = document.getElementById("time");
     timeElement.innerHTML = time;
 }
+
+function ISODateString(d){
+    function pad(n){return n<10 ? "0"+n : n}
+    return d.getUTCFullYear() + "-"
+        + pad(d.getUTCMonth() + 1) + "-"
+        + pad(d.getUTCDate()) + "T"
+        + pad(d.getUTCHours()) + ":"
+        + pad(d.getUTCMinutes()) + ":"
+        + pad(d.getUTCSeconds()) + "Z"
+}
+
 function updateDate() {
     var now = new Date();
 
@@ -20,6 +31,34 @@ function updateDate() {
 
     var dateElement = document.getElementById("date");
     dateElement.innerHTML = date;
+
+    var today = new Date(year, month, day);
+    var tomorrow = new Date(year, month, day + 1);
+
+    var todayTimestamp = ISODateString(today);
+    var tomorrowTimestamp = ISODateString(tomorrow);
+
+    var req = new XMLHttpRequest();
+    var reqURL = "https://www.googleapis.com/calendar/v3/calendars/7b7lqip1244c4k7d9pdl6hair746q2nd%40import.calendar.google.com/events?key=AIzaSyCzjAj9QlD1P_eG_1HT7KqQjbfmfSDw-TU&timeMin=" + todayTimestamp + "&timeMax=" + tomorrowTimestamp;
+    req.open("GET", reqURL, true);
+    req.send();
+
+    req.onreadystatechange = processRequest;
+
+    function processRequest() {
+        if (req.readyState == 4 && req.status == 200) {
+            var calendar = JSON.parse(req.responseText);
+            var events = calendar.items;
+            for (var i = 0; i < events.length; i++) {
+                var summary = events[i].summary;
+                var regex = new RegExp("Day\\s[1-7]");
+                if (regex.test(summary)) {
+                    var cycleday = document.getElementById("cycleday");
+                    cycleday.innerHTML = summary;
+                }
+            }
+        }
+    }
 }
 
 window.addEventListener("load",function() {
