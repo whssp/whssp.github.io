@@ -2,8 +2,13 @@
 <html>
 <head>
     <link rel="stylesheet" href="css/weather-icons.css">
+
     <title>Wellesley HS Announcements</title>
+
     <script src="https://unpkg.com/vue"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/sports.js"></script>
+
     <style type="text/css">
         body {
             height: 100vh;
@@ -48,36 +53,6 @@
                 <div id ="currenttemp" style="color: white; font-size: 5em; margin-left: 5%; margin-top: 0">50&deg;</div>
             </div>
             <div id="minmax" style="text-align: center; font-size: 3em; margin-left: auto; margin-right: auto; color: white; font-family: sans-serif">50&deg;/50&deg;</div>
-            <script>
-                var owmConditions = ["01d", "02d", "03d", "04d", "09d", "10d", "11d", "13d", "50d", "01n", "02n", "03n", "04n", "09n", "10n", "11n", "13n", "50n"];
-                var icons = ["wi-day-sunny", "wi-day-sunny-overcast", "wi-day-cloudy", "wi-day-sunny-overcast", "wi-day-showers", "wi-day-rain", "wi-day-thunderstorm", "wi-day-snow", "wi-day-fog", "wi-night-clear", "wi-night-partly-cloudy", "wi-night-cloudy", "wi-night-partly-cloudy", "wi-night-showers", "wi-night-rain", "wi-night-thunderstorm", "wi-night-snow", "wi-night-fog"]
-
-                function updateWeather() {
-                    var req = new XMLHttpRequest();
-                    req.open("GET", "https://api.openweathermap.org/data/2.5/weather?id=4954738&units=imperial&appid=a55ffcf3f9495731e0224158eb59cfe2", true);
-                    req.send();
-
-                    req.addEventListener("readystatechange", processRequest, false);
-                    req.onreadystatechange = processRequest;
-
-                    function processRequest(e) {
-                        if (req.readyState == 4 && req.status == 200) {
-                            var response = JSON.parse(req.responseText);
-
-                            var minmax = document.getElementById("minmax");
-                            minmax.innerHTML =  Math.round(response.main.temp_min) + "&deg; / " + Math.round(response.main.temp_max) + "&deg;"
-
-                            var currentTemp = document.getElementById("currenttemp");
-                            currentTemp.innerHTML = Math.round(response.main.temp) + "&deg;"
-
-                            var currentimage = document.getElementById("currentimage");
-                            currentimage.className = "wi " + icons[owmConditions.indexOf(response.weather[0].icon)];
-                        }
-                    }}
-
-                updateWeather();
-                setInterval(updateWeather, 60 * 1000)
-            </script>
         </div>
     </div>
     <div id="rightstack" style="float: right; width: 80%; height: 100%; background-color: green">
@@ -86,9 +61,6 @@
             <div style="vertical-align: middle">
                 <marquee id="text" behavior="scroll" direction="left">Here is some scrolling text... right to left!
                 </marquee>
-                <script>
-                    document.getElementById("text").innerHTML = "New text!";
-                </script>
                 <a class="twitter-timeline"
                    href="https://twitter.com/{screen_name}">
                     Tweets by @{screen_name}
