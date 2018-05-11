@@ -127,13 +127,13 @@ function updateDate() {
 
 
                 nextBlockTimespan.innerHTML = nextHourStart + ":" + timespans[1][1] + " - " + nextHourEnd + ":" + timespans[1][3];
+                return;
             }
             for (let i = 0; i < timespans.length; i++) {
                 let timespan = timespans[i];
                 if ((timespan[0] === hours && timespan[1] < minutes
                     || timespan[2] === hours && timespan[3] > minutes)
                     || hours > timespan[0] && hours < timespan[2]) {
-
                     let color = blockColors[dayNum][i];
                     let name = blockNames[i];
                     currentBlock.style.backgroundColor = color;
