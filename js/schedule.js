@@ -101,10 +101,10 @@ function updateDate() {
                     var color = colors[dayNum][i];
                     var realColor = color;
                     if (color == "Advisory") color = "gray";
-                    currentBlock.style.backgroundColor = realColor;
+                    currentBlock.style.backgroundColor = color;
 
                     var currentBlockColor = document.getElementById("currentblockcolor");
-                    currentBlockColor.innerHTML = color;
+                    currentBlockColor.innerHTML = realColor;
 
                     var currentBlockTimespan = document.getElementById("currentblocktimespan");
 
@@ -135,6 +135,8 @@ function updateDate() {
 
                     var nextBlockTimespan = document.getElementById("nextblocktimespan");
                     nextBlockTimespan.innerHTML = nextHourStart + ":" + nextTimespan[1] + " - " + nextHourEnd + ":" + nextTimespan[3];
+
+                    break;
                 }
             }
         }
