@@ -30,7 +30,7 @@ function updateTime() {
     let minutes = now.getMinutes();
     let half = "AM";
     if (hours > 11) half = "PM";
-    if (minutes.toString().length == 1) {
+    if (minutes.toString().length === 1) {
         minutes = "0" + minutes;
     }
     let time = hour + ":" + minutes + " " + half;
@@ -39,6 +39,9 @@ function updateTime() {
     timeElement.innerHTML = time;
 }
 
+/**
+ * @return {string}
+ */
 function ISODateString(d){
     function pad(n){return n<10 ? "0"+n : n}
     return d.getUTCFullYear() + "-"
@@ -79,7 +82,7 @@ function updateDate() {
 
 
     function processRequest() {
-        if (req.readyState == 4 && req.status == 200) {
+        if (req.readyState === 4 && req.status === 200) {
             let calendar = JSON.parse(req.responseText);
             let events = calendar.items;
             let dayNum = 0;
@@ -93,7 +96,7 @@ function updateDate() {
                 }
             }
 
-            if (dayNum == 0) return;
+            if (dayNum === 0) return;
 
             let currentBlock = document.getElementById("currentblock");
             let currentBlockName = document.getElementById("currentblockname");
@@ -104,7 +107,7 @@ function updateDate() {
             let nextBlockName = document.getElementById("nextblockname");
             let nextBlockColor = document.getElementById("nextblockcolor");
             let nextBlockTimespan = document.getElementById("nextblocktimespan");
-            if (hours < timespans[0][0] || (hours == timespans[0][0] && minutes < timespans[0][1])) {
+            if (hours < timespans[0][0] || (hours === timespans[0][0] && minutes < timespans[0][1])) {
                 currentBlock.style.backgroundColor = "Gray";
                 currentBlockName.innerHTML = "Currently: ";
                 currentBlockColor.innerHTML = "No Classes";
@@ -113,17 +116,17 @@ function updateDate() {
                 let nextColor = blockColors[dayNum][0];
                 nextBlock.style.backgroundColor = nextColor;
                 nextBlockName.innerHTML = "Next: " + blockNames[0];
-                if (nextColor == "Gray") {
+                if (nextColor === "Gray") {
                     nextBlockColor.innerHTML = "";
                 } else {
                     nextBlockColor.innerHTML = nextColor;
                 }
 
                 let nextHourStart = timespans[1][0] % 12;
-                if (nextHourStart == 0) nextHourStart = 12;
+                if (nextHourStart === 0) nextHourStart = 12;
 
                 let nextHourEnd = timespans[1][2] % 12;
-                if (nextHourEnd == 0) nextHourEnd = 12;
+                if (nextHourEnd === 0) nextHourEnd = 12;
 
 
                 nextBlockTimespan.innerHTML = nextHourStart + ":" + timespans[1][1] + " - " + nextHourEnd + ":" + timespans[1][3];
@@ -140,21 +143,21 @@ function updateDate() {
 
                     currentBlockName.innerHTML = "Currently: " + name;
 
-                    if (color == "Gray") {
+                    if (color === "Gray") {
                         currentBlockColor.innerHTML = "";
                     } else {
                         currentBlockColor.innerHTML = color;
                     }
 
                     let hourStart = timespan[0] % 12;
-                    if (hourStart == 0) hourStart = 12;
+                    if (hourStart === 0) hourStart = 12;
 
                     let hourEnd = timespan[2] % 12;
-                    if (hourEnd == 0) hourEnd = 12;
+                    if (hourEnd === 0) hourEnd = 12;
 
                     currentBlockTimespan.innerHTML = hourStart + ":" + timespan[1] + " - " + hourEnd + ":" + timespan[3];
 
-                    if (i == timespans.length - 1) {
+                    if (i === timespans.length - 1) {
                         nextBlockName.innerHTML = "Next: ";
                         nextBlockColor.innerHTML = "No Classes";
                         nextBlockTimespan.innerHTML = "2:30"
@@ -169,17 +172,17 @@ function updateDate() {
 
                         nextBlockName.innerHTML = "Next: " + nextName;
 
-                        if (nextColor == "Gray") {
+                        if (nextColor === "Gray") {
                             nextBlockColor.innerHTML = "";
                         } else {
                             nextBlockColor.innerHTML = nextColor;
                         }
 
                         let nextHourStart = nextTimespan[0] % 12;
-                        if (nextHourStart == 0) nextHourStart = 12;
+                        if (nextHourStart === 0) nextHourStart = 12;
 
                         let nextHourEnd = nextTimespan[2] % 12;
-                        if (nextHourEnd == 0) nextHourEnd = 12;
+                        if (nextHourEnd === 0) nextHourEnd = 12;
 
 
                         nextBlockTimespan.innerHTML = nextHourStart + ":" + nextTimespan[1] + " - " + nextHourEnd + ":" + nextTimespan[3];
