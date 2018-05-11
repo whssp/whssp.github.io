@@ -86,7 +86,7 @@ function updateDate() {
             for (let i = 0; i < events.length; i++) {
                 let summary = events[i].summary;
                 if (dayRegex.test(summary)) {
-                    let dayNum = summary.match(/\d+/)[0] - 1;
+                    dayNum = summary.match(/\d+/)[0] - 1;
 
                     let cycleday = document.getElementById("cycleday");
                     cycleday.innerHTML = summary;
@@ -104,13 +104,13 @@ function updateDate() {
             let nextBlockName = document.getElementById("nextblockname");
             let nextBlockColor = document.getElementById("nextblockcolor");
             let nextBlockTimespan = document.getElementById("nextblocktimespan");
-            if (hours < timespan[0] || (hours == timespan[0] && minutes < timespan[1])) {
+            if (hours < timespans[0][0] || (hours == timespans[0][0] && minutes < timespans[0][1])) {
                 currentBlock.style.backgroundColor = "Gray";
                 currentBlockName.innerHTML = "Currently: ";
                 currentBlockColor.innerHTML = "No Classes";
                 currentBlockTimespan.innerHTML = "";
 
-                let nextColor = blockColors[daynum][0];
+                let nextColor = blockColors[dayNum][0];
                 nextBlock.style.backgroundColor = nextColor;
                 nextBlockName.innerHTML = "Next: " + blockNames[0];
                 if (nextColor == "Gray") {
@@ -119,14 +119,14 @@ function updateDate() {
                     nextBlockColor.innerHTML = nextColor;
                 }
 
-                let nextHourStart = nextTimespan[0] % 12;
+                let nextHourStart = timespans[1][0] % 12;
                 if (nextHourStart == 0) nextHourStart = 12;
 
-                let nextHourEnd = nextTimespan[2] % 12;
+                let nextHourEnd = timespans[1][2] % 12;
                 if (nextHourEnd == 0) nextHourEnd = 12;
 
 
-                nextBlockTimespan.innerHTML = nextHourStart + ":" + nextTimespan[1] + " - " + nextHourEnd + ":" + nextTimespan[3];
+                nextBlockTimespan.innerHTML = nextHourStart + ":" + timespans[1][1] + " - " + nextHourEnd + ":" + timespans[1][3];
             }
             for (let i = 0; i < timespans.length; i++) {
                 let timespan = timespans[i];
