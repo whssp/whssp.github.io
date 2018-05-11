@@ -128,7 +128,7 @@ function updateDate() {
 
                     var nextBlock = document.getElementById("nextblock");
                     var nextColor = blockColors[dayNum][i + 1];
-                    var nextName = blockNames[i];
+                    var nextName = blockNames[i + 1];
                     nextBlock.style.backgroundColor = nextColor;
 
                     var nextBlockName = document.getElementById("nextblockname");
