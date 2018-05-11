@@ -1,17 +1,17 @@
-var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-var blockNames = ["Block 1", "Block 2", "Advisory", "Block 3", "Block 4", "Block 5", "Block 6"];
+let months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+let blockNames = ["Block 1", "Block 2", "Advisory", "Block 3", "Block 4", "Block 5", "Block 6"];
 
-var blockColors = [
-    ["Gray, Orange, Gray, Yellow, Green, Red, Blue"],
-    ["Gray, Yellow, Gray, Orange, Tan, Red, Purple"],
+let blockColors = [
+    ["Gray", "Orange", "Gray", "Yellow", "Green", "Red", "Blue"],
+    ["Gray", "Yellow", "Gray", "Orange", "Tan", "Red", "Purple"],
     ["Gray", "Green", "Gray", "Orange", "Tan", "Purple", "Blue"],
     ["Gray", "Tan", "Gray", "Yellow", "Green", "Red", "Blue"],
     ["Gray", "Red", "Gray", "Orange", "Yellow", "Purple", "Blue"],
-    ["Gray, Purple", "Gray", "Orange", "Green", "Tan", "Red"],
-    ["Gray", "Blue" ,"Gray", "Yellow", "Green", "Tan", "Purple"]
+    ["Gray", "Purple", "Gray", "Orange", "Green", "Tan", "Red",],
+    ["Gray", "Blue" ,"Gray", "Yellow", "Green", "Tan", "Purple",]
 ];
 
-var timespans = [
+let timespans = [
     [7, 30, 8, 29],
     [8, 34, 9, 33],
     [9, 38, 9, 46],
@@ -22,20 +22,20 @@ var timespans = [
 ];
 
 function updateTime() {
-    var now = new Date();
+    let now = new Date();
 
-    var hours = now.getHours();
-    var hour = hours % 12;
+    let hours = now.getHours();
+    let hour = hours % 12;
     if (hour === 0) hour = 12;
-    var minutes = now.getMinutes();
-    var half = "AM";
+    let minutes = now.getMinutes();
+    let half = "AM";
     if (hours > 11) half = "PM";
     if (minutes.toString().length == 1) {
         minutes = "0" + minutes;
     }
-    var time = hour + ":" + minutes + " " + half;
+    let time = hour + ":" + minutes + " " + half;
 
-    var timeElement = document.getElementById("time");
+    let timeElement = document.getElementById("time");
     timeElement.innerHTML = time;
 }
 
@@ -50,106 +50,140 @@ function ISODateString(d){
 }
 
 function updateDate() {
-    var now = new Date();
+    let now = new Date();
 
-    var minutes = now.getMinutes();
-    var hours = now.getHours();
-    var day = now.getDate();
-    var month = now.getMonth();
-    var year = now.getFullYear();
-    var date = months[month] + " " + day + ", " + year;
+    let minutes = now.getMinutes();
+    let hours = now.getHours();
+    let day = now.getDate();
+    let month = now.getMonth();
+    let year = now.getFullYear();
+    let date = months[month] + " " + day + ", " + year;
 
-    var dateElement = document.getElementById("date");
+    let dateElement = document.getElementById("date");
     dateElement.innerHTML = date;
 
-    var today = new Date(year, month, day);
-    var tomorrow = new Date(year, month, day + 1);
+    let today = new Date(year, month, day);
+    let tomorrow = new Date(year, month, day + 1);
 
-    var todayTimestamp = ISODateString(today);
-    var tomorrowTimestamp = ISODateString(tomorrow);
+    let todayTimestamp = ISODateString(today);
+    let tomorrowTimestamp = ISODateString(tomorrow);
 
-    var req = new XMLHttpRequest();
-    var reqURL = "https://www.googleapis.com/calendar/v3/calendars/7b7lqip1244c4k7d9pdl6hair746q2nd%40import.calendar.google.com/events?key=AIzaSyCzjAj9QlD1P_eG_1HT7KqQjbfmfSDw-TU&timeMin=" + todayTimestamp + "&timeMax=" + tomorrowTimestamp;
+    let req = new XMLHttpRequest();
+    let reqURL = "https://www.googleapis.com/calendar/v3/calendars/7b7lqip1244c4k7d9pdl6hair746q2nd%40import.calendar.google.com/events?key=AIzaSyCzjAj9QlD1P_eG_1HT7KqQjbfmfSDw-TU&timeMin=" + todayTimestamp + "&timeMax=" + tomorrowTimestamp;
     req.open("GET", reqURL, true);
     req.send();
 
     req.onreadystatechange = processRequest;
 
-    var dayRegex = new RegExp("Day\\s[1-7]");
+    let dayRegex = new RegExp("Day\\s[1-7]");
 
 
     function processRequest() {
         if (req.readyState == 4 && req.status == 200) {
-            var calendar = JSON.parse(req.responseText);
-            var events = calendar.items;
-            var dayNum = 0;
-            for (var i = 0; i < events.length; i++) {
-                var summary = events[i].summary;
+            let calendar = JSON.parse(req.responseText);
+            let events = calendar.items;
+            let dayNum = 0;
+            for (let i = 0; i < events.length; i++) {
+                let summary = events[i].summary;
                 if (dayRegex.test(summary)) {
-                    var dayNum = summary.match(/\d+/)[0] - 1;
+                    let dayNum = summary.match(/\d+/)[0] - 1;
 
-                    var cycleday = document.getElementById("cycleday");
+                    let cycleday = document.getElementById("cycleday");
                     cycleday.innerHTML = summary;
                 }
             }
 
             if (dayNum == 0) return;
 
-            for (var i = 0; i < timespans.length; i++) {
-                var timespan = timespans[i];
+            let currentBlock = document.getElementById("currentblock");
+            let currentBlockName = document.getElementById("currentblockname");
+            let currentBlockColor = document.getElementById("currentblockcolor");
+            let currentBlockTimespan = document.getElementById("currentblocktimespan");
+
+            let nextBlock = document.getElementById("nextblock");
+            let nextBlockName = document.getElementById("nextblockname");
+            let nextBlockColor = document.getElementById("nextblockcolor");
+            let nextBlockTimespan = document.getElementById("nextblocktimespan");
+            if (hours < timespan[0] || (hours == timespan[0] && minutes < timespan[1])) {
+                currentBlock.style.backgroundColor = "Gray";
+                currentBlockName.innerHTML = "Currently: ";
+                currentBlockColor.innerHTML = "No Classes";
+                currentBlockTimespan.innerHTML = "";
+
+                let nextColor = blockColors[daynum][0];
+                nextBlock.style.backgroundColor = nextColor;
+                nextBlockName.innerHTML = "Next: " + blockNames[0];
+                if (nextColor == "Gray") {
+                    nextBlockColor.innerHTML = "";
+                } else {
+                    nextBlockColor.innerHTML = nextColor;
+                }
+
+                let nextHourStart = nextTimespan[0] % 12;
+                if (nextHourStart == 0) nextHourStart = 12;
+
+                let nextHourEnd = nextTimespan[2] % 12;
+                if (nextHourEnd == 0) nextHourEnd = 12;
+
+
+                nextBlockTimespan.innerHTML = nextHourStart + ":" + nextTimespan[1] + " - " + nextHourEnd + ":" + nextTimespan[3];
+            }
+            for (let i = 0; i < timespans.length; i++) {
+                let timespan = timespans[i];
                 if ((timespan[0] === hours && timespan[1] < minutes
                     || timespan[2] === hours && timespan[3] > minutes)
                     || hours > timespan[0] && hours < timespan[2]) {
-                    var currentBlock = document.getElementById("currentblock");
-                    var color = blockColors[dayNum][i];
-                    var name = blockNames[i];
+
+                    let color = blockColors[dayNum][i];
+                    let name = blockNames[i];
                     currentBlock.style.backgroundColor = color;
 
-                    var currentBlockName = document.getElementById("currentblockname");
                     currentBlockName.innerHTML = "Currently: " + name;
 
-                    var currentBlockColor = document.getElementById("currentblockcolor");
                     if (color == "Gray") {
                         currentBlockColor.innerHTML = "";
                     } else {
                         currentBlockColor.innerHTML = color;
                     }
-                    var currentBlockTimespan = document.getElementById("currentblocktimespan");
 
-                    var hourStart = timespan[0] % 12;
+                    let hourStart = timespan[0] % 12;
                     if (hourStart == 0) hourStart = 12;
 
-                    var hourEnd = timespan[2] % 12;
+                    let hourEnd = timespan[2] % 12;
                     if (hourEnd == 0) hourEnd = 12;
 
                     currentBlockTimespan.innerHTML = hourStart + ":" + timespan[1] + " - " + hourEnd + ":" + timespan[3];
 
-                    var nextTimespan = timespans[i + 1];
-
-                    var nextBlock = document.getElementById("nextblock");
-                    var nextColor = blockColors[dayNum][i + 1];
-                    var nextName = blockNames[i + 1];
-                    nextBlock.style.backgroundColor = nextColor;
-
-                    var nextBlockName = document.getElementById("nextblockname");
-                    nextBlockName.innerHTML = "Next: " + nextName;
-
-                    var nextBlockColor = document.getElementById("nextblockcolor");
-                    if (nextColor == "Gray") {
-                        nextBlockColor.innerHTML = "";
+                    if (i == timespans.length - 1) {
+                        nextBlockName.innerHTML = "Next: ";
+                        nextBlockColor.innerHTML = "No Classes";
+                        nextBlockTimespan.innerHTML = "2:30"
                     } else {
-                        nextBlockColor.innerHTML = nextColor;
+                        let nextTimespan = timespans[i + 1];
+
+
+                        let nextColor = blockColors[dayNum][i + 1];
+                        let nextName = blockNames[i + 1];
+                        nextBlock.style.backgroundColor = nextColor;
+
+
+                        nextBlockName.innerHTML = "Next: " + nextName;
+
+                        if (nextColor == "Gray") {
+                            nextBlockColor.innerHTML = "";
+                        } else {
+                            nextBlockColor.innerHTML = nextColor;
+                        }
+
+                        let nextHourStart = nextTimespan[0] % 12;
+                        if (nextHourStart == 0) nextHourStart = 12;
+
+                        let nextHourEnd = nextTimespan[2] % 12;
+                        if (nextHourEnd == 0) nextHourEnd = 12;
+
+
+                        nextBlockTimespan.innerHTML = nextHourStart + ":" + nextTimespan[1] + " - " + nextHourEnd + ":" + nextTimespan[3];
                     }
-
-
-                    var nextHourStart = nextTimespan[0] % 12;
-                    if (nextHourStart == 0) nextHourStart = 12;
-
-                    var nextHourEnd = nextTimespan[2] % 12;
-                    if (nextHourEnd == 0) nextHourEnd = 12;
-
-                    var nextBlockTimespan = document.getElementById("nextblocktimespan");
-                    nextBlockTimespan.innerHTML = nextHourStart + ":" + nextTimespan[1] + " - " + nextHourEnd + ":" + nextTimespan[3];
 
                     break;
                 }
