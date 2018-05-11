@@ -1,22 +1,25 @@
-var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"]
-var colors = [
-    ["Orange", "Advisory", "Yellow", "Green", "Red", "Blue"],
-    ["Yellow", "Advisory", "Orange", "Tan", "Red", "Purple"],
-    ["Green", "Advisory", "Orange", "Tan", "Purple", "Blue"],
-    ["Tan", "Advisory", "Yellow", "Green", "Red", "Blue"],
-    ["Red", "Advisory", "Orange", "Yellow", "Purple", "Blue"],
-    ["Purple", "Advisory", "Orange", "Green", "Tan", "Red"],
-    ["Blue", "Advisory", "Yellow", "Green", "Tan", "Purple"],
-]
+var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+var blockNames = ["Block 1", "Block 2", "Advisory", "Block 3", "Block 4", "Block 5", "Block 6"];
+
+var blockColors = [
+    ["Gray, Orange, Gray, Yellow, Green, Red, Blue"],
+    ["Gray, Yellow, Gray, Orange, Tan, Red, Purple"],
+    ["Gray", "Green", "Gray", "Orange", "Tan", "Purple", "Blue"],
+    ["Gray", "Tan", "Gray", "Yellow", "Green", "Red", "Blue"],
+    ["Gray", "Red", "Gray", "Orange", "Yellow", "Purple", "Blue"],
+    ["Gray, Purple", "Gray", "Orange", "Green", "Tan", "Red"],
+    ["Gray", "Blue" ,"Gray", "Yellow", "Green", "Tan", "Purple"]
+];
 
 var timespans = [
-    [7, 30, 9, 33],
+    [7, 30, 8, 29],
+    [8, 34, 9, 33],
     [9, 38, 9, 46],
     [9, 51, 10, 50],
     [10, 55, 12, 22],
     [12, 27, 13, 26],
     [13, 31, 14, 30]
-]
+];
 
 function updateTime() {
     var now = new Date();
@@ -98,14 +101,19 @@ function updateDate() {
                     || timespan[2] === hours && timespan[3] > minutes)
                     || hours > timespan[0] && hours < timespan[2]) {
                     var currentBlock = document.getElementById("currentblock");
-                    var color = colors[dayNum][i];
-                    var realColor = color;
-                    if (color == "Advisory") color = "gray";
+                    var color = blockColors[dayNum][i];
+                    var name = blockNames[i];
                     currentBlock.style.backgroundColor = color;
 
-                    var currentBlockColor = document.getElementById("currentblockcolor");
-                    currentBlockColor.innerHTML = realColor;
+                    var currentBlockName = document.getElementById("currentblockname");
+                    currentBlockName.innerHTML = "Currently: " + name;
 
+                    var currentBlockColor = document.getElementById("currentblockcolor");
+                    if (color == "Gray") {
+                        currentBlockColor.innerHTML = "";
+                    } else {
+                        currentBlockColor.innerHTML = color;
+                    }
                     var currentBlockTimespan = document.getElementById("currentblocktimespan");
 
                     var hourStart = timespan[0] % 12;
@@ -119,13 +127,20 @@ function updateDate() {
                     var nextTimespan = timespans[i + 1];
 
                     var nextBlock = document.getElementById("nextblock");
-                    var nextColor = colors[dayNum][i + 1];
-                    var realNextColor = nextColor;
-                    if (nextColor == "Advisory") nextColor = "gray";
+                    var nextColor = blockColors[dayNum][i + 1];
+                    var nextName = blockNames[i];
                     nextBlock.style.backgroundColor = nextColor;
 
+                    var nextBlockName = document.getElementById("nextblockname");
+                    nextBlockName.innerHTML = "Next: " + nextName;
+
                     var nextBlockColor = document.getElementById("nextblockcolor");
-                    nextBlockColor.innerHTML = realNextColor;
+                    if (nextColor == "Gray") {
+                        nextBlockColor.innerHTML = "";
+                    } else {
+                        nextBlockColor.innerHTML = nextColor;
+                    }
+
 
                     var nextHourStart = nextTimespan[0] % 12;
                     if (nextHourStart == 0) nextHourStart = 12;
