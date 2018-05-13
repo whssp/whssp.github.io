@@ -23,6 +23,7 @@ let timespans = [
 
 let countingDown = false;
 let nextClass = new Date();
+let dayNum = -1;
 let countdownIntervalHandle;
 
 function within(index) {
@@ -92,6 +93,69 @@ function updateTime() {
 
     let timeElement = document.getElementById("time");
     timeElement.innerHTML = time;
+
+
+    if (dayNum === -1  || countingDown) return;
+
+    let currentBlock = document.getElementById("currentblock");
+    let currentBlockName = document.getElementById("currentblockname");
+    let currentBlockColor = document.getElementById("currentblockcolor");
+    let currentBlockTimespan = document.getElementById("currentblocktimespan");
+
+    let nextBlock = document.getElementById("nextblock");
+    let nextBlockName = document.getElementById("nextblockname");
+    let nextBlockColor = document.getElementById("nextblockcolor");
+    let nextBlockTimespan = document.getElementById("nextblocktimespan");
+    if (before(0)) {
+        currentBlock.style.backgroundColor = "Gray";
+        currentBlockName.innerHTML = "Currently: ";
+        currentBlockColor.innerHTML = "No Classes";
+        currentBlockTimespan.innerHTML = "";
+
+        setNextBlock(0, dayNum);
+        return;
+    } else if (after(6)) {
+        currentBlock.style.backgroundColor = "Gray";
+        currentBlockName.innerHTML = "Currently: ";
+        currentBlockColor.innerHTML = "No Classes";
+        currentBlockTimespan.innerHTML = "2:30";
+
+        nextBlock.style.backgroundColor = "Gray";
+        nextBlockName.innerHTML = "";
+        nextBlockColor.innerHTML = "";
+        nextBlockTimespan.innerHTML = "";
+    }
+    for (let i = 0; i < timespans.length; i++) {
+        if (within(i)) {
+            setCurrentBlock(i, dayNum);
+
+            if (i === timespans.length - 1) {
+                nextBlock.style.backgroundColor = "Gray";
+                nextBlockName.innerHTML = "Next: ";
+                nextBlockColor.innerHTML = "No Classes";
+                nextBlockTimespan.innerHTML = "2:30"
+            } else {
+                setNextBlock(i + 1, dayNum);
+            }
+
+            break;
+        } else if (after(i) && before(i + 1) && !countingDown) {
+            currentBlock.style.backgroundColor = "Gray";
+            currentBlockName.innerHTML = "Time to Class: ";
+            nextClass = new Date();
+            nextClass.setHours(timespans[i + 1][0]);
+            nextClass.setMinutes(timespans[i + 1][1]);
+            nextClass.setSeconds(0);
+            nextClass.setMilliseconds(0);
+            countdownIntervalHandle = setInterval(updateCountdown, 100);
+            updateCountdown();
+
+            currentBlockTimespan.innerHTML = "";
+            countingDown = true;
+
+            setNextBlock(i + 1, dayNum);
+        }
+    }
 }
 
 /**
@@ -200,7 +264,6 @@ function updateDate() {
         if (req.readyState === 4 && req.status === 200) {
             let calendar = JSON.parse(req.responseText);
             let events = calendar.items;
-            let dayNum = 0;
             for (let i = 0; i < events.length; i++) {
                 let summary = events[i].summary;
                 if (dayRegex.test(summary)) {
@@ -208,68 +271,6 @@ function updateDate() {
 
                     let cycleday = document.getElementById("cycleday");
                     cycleday.innerHTML = summary;
-                }
-            }
-
-            if (dayNum === 0  || countingDown) return;
-
-            let currentBlock = document.getElementById("currentblock");
-            let currentBlockName = document.getElementById("currentblockname");
-            let currentBlockColor = document.getElementById("currentblockcolor");
-            let currentBlockTimespan = document.getElementById("currentblocktimespan");
-
-            let nextBlock = document.getElementById("nextblock");
-            let nextBlockName = document.getElementById("nextblockname");
-            let nextBlockColor = document.getElementById("nextblockcolor");
-            let nextBlockTimespan = document.getElementById("nextblocktimespan");
-            if (before(0)) {
-                currentBlock.style.backgroundColor = "Gray";
-                currentBlockName.innerHTML = "Currently: ";
-                currentBlockColor.innerHTML = "No Classes";
-                currentBlockTimespan.innerHTML = "";
-
-                setNextBlock(0, dayNum);
-                return;
-            } else if (after(6)) {
-                currentBlock.style.backgroundColor = "Gray";
-                currentBlockName.innerHTML = "Currently: ";
-                currentBlockColor.innerHTML = "No Classes";
-                currentBlockTimespan.innerHTML = "2:30";
-
-                nextBlock.style.backgroundColor = "Gray";
-                nextBlockName.innerHTML = "";
-                nextBlockColor.innerHTML = "";
-                nextBlockTimespan.innerHTML = "";
-            }
-            for (let i = 0; i < timespans.length; i++) {
-                if (within(i)) {
-                    setCurrentBlock(i, dayNum);
-
-                    if (i === timespans.length - 1) {
-                        nextBlock.style.backgroundColor = "Gray";
-                        nextBlockName.innerHTML = "Next: ";
-                        nextBlockColor.innerHTML = "No Classes";
-                        nextBlockTimespan.innerHTML = "2:30"
-                    } else {
-                        setNextBlock(i + 1, dayNum);
-                    }
-
-                    break;
-                } else if (after(i) && before(i + 1) && !countingDown) {
-                    currentBlock.style.backgroundColor = "Gray";
-                    currentBlockName.innerHTML = "Time to Class: ";
-                    nextClass = new Date();
-                    nextClass.setHours(timespans[i + 1][0]);
-                    nextClass.setMinutes(timespans[i + 1][1]);
-                    nextClass.setSeconds(0);
-                    nextClass.setMilliseconds(0);
-                    countdownIntervalHandle = setInterval(updateCountdown, 100);
-                    updateCountdown();
-
-                    currentBlockTimespan.innerHTML = "";
-                    countingDown = true;
-
-                    setNextBlock(i + 1, dayNum);
                 }
             }
         }
