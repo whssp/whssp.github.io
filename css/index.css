@@ -34,12 +34,12 @@ img {
     margin: auto;
 }
 
-.example1 {
+.marquee {
     height: 10vh;
     overflow: hidden;
     position: relative;
 }
-.example1 #text{
+.marquee #text{
     font-size: 8vh;
     font-weight: normal;
     color: white;
@@ -54,9 +54,9 @@ img {
     -webkit-transform:translateX(100%);
     transform:translateX(100%);
     /* Apply animation to this element */
-    -moz-animation: example1 15s linear infinite;
-    -webkit-animation: example1 15s linear infinite;
-    animation: example1 15s linear infinite;
+    -moz-animation: example1 15s steps(30) infinite;
+    -webkit-animation: example1 15s steps(30) infinite;
+    animation: example1 15s steps(30) infinite;
     will-change: transform;
 }
 /* Move it (define the animation) */
