@@ -38,13 +38,14 @@ img {
     height: 10vh;
     overflow: hidden;
     position: relative;
+    white-space: nowrap;
 }
-.marquee #text{
+.marquee #text1{
     font-size: 8vh;
     font-weight: normal;
     color: white;
     position: absolute;
-    width: 100%;
+    width: max-content;
     height: 100%;
     margin: 0;
     line-height: 10vh;
@@ -54,21 +55,42 @@ img {
     -webkit-transform:translateX(100%);
     transform:translateX(100%);
     /* Apply animation to this element */
-    -moz-animation: example1 15s steps(30) infinite;
-    -webkit-animation: example1 15s steps(30) infinite;
-    animation: example1 15s steps(30) infinite;
+    -moz-animation: marquee1 15s steps(30) infinite;
+    -webkit-animation: marquee1 15s steps(30) infinite;
+    animation: marquee1 15s steps(30) infinite;
+    will-change: transform;
+}
+.marquee #text2{
+    font-size: 8vh;
+    font-weight: normal;
+    color: white;
+    position: absolute;
+    width: max-content;
+    height: 100%;
+    margin: 0;
+    line-height: 10vh;
+    text-align: center;
+    /* Starting position */
+    -moz-transform:translateX(100%);
+    -webkit-transform:translateX(100%);
+    transform:translateX(100%);
+    /* Apply animation to this element */
+    -moz-animation: marquee1 15s steps(30) infinite;
+    -webkit-animation: marquee1 15s steps(30) infinite;
+    animation: marquee1 15s steps(30) infinite;
+    animation-delay: 7.5s;
     will-change: transform;
 }
 /* Move it (define the animation) */
-@-moz-keyframes example1 {
+@-moz-keyframes marquee1 {
     0%   { -moz-transform: translateX(100%); }
     100% { -moz-transform: translateX(-100%); }
 }
-@-webkit-keyframes example1 {
+@-webkit-keyframes marquee1 {
     0%   { -webkit-transform: translateX(100%); }
     100% { -webkit-transform: translateX(-100%); }
 }
-@keyframes example1 {
+@keyframes marquee1 {
     0%   {
         -moz-transform: translateX(100%); /* Firefox bug fix */
         -webkit-transform: translateX(100%); /* Firefox bug fix */
