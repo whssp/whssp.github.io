@@ -129,6 +129,7 @@ function updateTime() {
         currentBlockTimespan.innerHTML = "";
 
         setNextBlock(0, dayNum);
+
         return;
     } else if (after(6)) {
         currentBlock.style.backgroundColor = "Gray";
@@ -140,6 +141,8 @@ function updateTime() {
         nextBlockName.innerHTML = "";
         nextBlockColor.innerHTML = "";
         nextBlockTimespan.innerHTML = "";
+
+        return;
     }
     for (let i = 0; i < timespans.length; i++) {
         if (within(i)) {
