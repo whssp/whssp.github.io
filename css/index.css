@@ -55,9 +55,9 @@ img {
     -webkit-transform:translateX(100%);
     transform:translateX(100%);
     /* Apply animation to this element */
-    -moz-animation: marquee1 15s steps(30) infinite;
-    -webkit-animation: marquee1 15s steps(30) infinite;
-    animation: marquee1 15s steps(30) infinite;
+    -moz-animation: marquee1 60s steps(900) infinite;
+    -webkit-animation: marquee1 60s steps(900) infinite;
+    animation: marquee1 60s steps(900) infinite;
     will-change: transform;
 }
 .marquee #text2{
@@ -75,10 +75,10 @@ img {
     -webkit-transform:translateX(100%);
     transform:translateX(100%);
     /* Apply animation to this element */
-    -moz-animation: marquee1 15s steps(30) infinite;
-    -webkit-animation: marquee1 15s steps(30) infinite;
-    animation: marquee1 15s steps(30) infinite;
-    animation-delay: 7.5s;
+    -moz-animation: marquee1 60s steps(900) infinite;
+    -webkit-animation: marquee1 60s steps(900) infinite;
+    animation: marquee1 60s steps(900) infinite;
+    animation-delay: 30s;
     will-change: transform;
 }
 /* Move it (define the animation) */
