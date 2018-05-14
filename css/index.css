@@ -57,6 +57,7 @@ img {
     -moz-animation: example1 15s linear infinite;
     -webkit-animation: example1 15s linear infinite;
     animation: example1 15s linear infinite;
+    will-change: transform;
 }
 /* Move it (define the animation) */
 @-moz-keyframes example1 {
