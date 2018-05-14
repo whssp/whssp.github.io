@@ -23,7 +23,22 @@ let timespans = [
 
 let countingDown = false;
 let nextClass = new Date();
+let dayNum = -1;
 let countdownIntervalHandle;
+
+let timeElement;
+let dateElement;
+let cycleDay;
+
+let currentBlock;
+let currentBlockName;
+let currentBlockColor;
+let currentBlockTimespan;
+
+let nextBlock;
+let nextBlockName;
+let nextBlockColor;
+let nextBlockTimespan;
 
 function within(index) {
     let now = new Date();
@@ -71,7 +86,6 @@ function updateCountdown() {
             updateDate();
             return;
         }
-        let currentBlockColor = document.getElementById("currentblockcolor");
         currentBlockColor.innerHTML = minutes + ":" + seconds;
     }
 }
@@ -90,8 +104,74 @@ function updateTime() {
     }
     let time = hour + ":" + minutes + " " + half;
 
-    let timeElement = document.getElementById("time");
     timeElement.innerHTML = time;
+
+
+    if (countingDown) return;
+    if (dayNum === -1) {
+        currentBlock.style.backgroundColor = "Gray";
+        currentBlockName.innerHTML = "";
+        currentBlockColor.innerHTML = "";
+        currentBlockTimespan.innerHTML = "";
+
+        nextBlock.style.backgroundColor = "Gray";
+        nextBlockName.innerHTML = "";
+        nextBlockColor.innerHTML = "";
+        nextBlockTimespan.innerHTML = "";
+
+        return;
+    }
+
+    if (before(0)) {
+        currentBlock.style.backgroundColor = "Gray";
+        currentBlockName.innerHTML = "Currently: ";
+        currentBlockColor.innerHTML = "No Classes";
+        currentBlockTimespan.innerHTML = "";
+
+        setNextBlock(0, dayNum);
+        return;
+    } else if (after(6)) {
+        currentBlock.style.backgroundColor = "Gray";
+        currentBlockName.innerHTML = "Currently: ";
+        currentBlockColor.innerHTML = "No Classes";
+        currentBlockTimespan.innerHTML = "2:30";
+
+        nextBlock.style.backgroundColor = "Gray";
+        nextBlockName.innerHTML = "";
+        nextBlockColor.innerHTML = "";
+        nextBlockTimespan.innerHTML = "";
+    }
+    for (let i = 0; i < timespans.length; i++) {
+        if (within(i)) {
+            setCurrentBlock(i, dayNum);
+
+            if (i === timespans.length - 1) {
+                nextBlock.style.backgroundColor = "Gray";
+                nextBlockName.innerHTML = "Next: ";
+                nextBlockColor.innerHTML = "No Classes";
+                nextBlockTimespan.innerHTML = "2:30"
+            } else {
+                setNextBlock(i + 1, dayNum);
+            }
+
+            break;
+        } else if (after(i) && before(i + 1) && !countingDown) {
+            currentBlock.style.backgroundColor = "Gray";
+            currentBlockName.innerHTML = "Time to Class: ";
+            nextClass = new Date();
+            nextClass.setHours(timespans[i + 1][0]);
+            nextClass.setMinutes(timespans[i + 1][1]);
+            nextClass.setSeconds(0);
+            nextClass.setMilliseconds(0);
+            countdownIntervalHandle = setInterval(updateCountdown, 100);
+            updateCountdown();
+
+            currentBlockTimespan.innerHTML = "";
+            countingDown = true;
+
+            setNextBlock(i + 1, dayNum);
+        }
+    }
 }
 
 /**
@@ -108,11 +188,6 @@ function ISODateString(d){
 }
 
 function setNextBlock(index, dayNum) {
-    let nextBlock = document.getElementById("nextblock");
-    let nextBlockName = document.getElementById("nextblockname");
-    let nextBlockColor = document.getElementById("nextblockcolor");
-    let nextBlockTimespan = document.getElementById("nextblocktimespan");
-
     let nextTimespan = timespans[index];
 
 
@@ -139,10 +214,6 @@ function setNextBlock(index, dayNum) {
 }
 
 function setCurrentBlock(index, dayNum) {
-    let currentBlock = document.getElementById("currentblock");
-    let currentBlockName = document.getElementById("currentblockname");
-    let currentBlockColor = document.getElementById("currentblockcolor");
-    let currentBlockTimespan = document.getElementById("currentblocktimespan");
 
     let timespan = timespans[index];
 
@@ -177,7 +248,6 @@ function updateDate() {
     let year = now.getFullYear();
     let date = months[month] + " " + day + ", " + year;
 
-    let dateElement = document.getElementById("date");
     dateElement.innerHTML = date;
 
     let today = new Date(year, month, day);
@@ -200,76 +270,12 @@ function updateDate() {
         if (req.readyState === 4 && req.status === 200) {
             let calendar = JSON.parse(req.responseText);
             let events = calendar.items;
-            let dayNum = 0;
             for (let i = 0; i < events.length; i++) {
                 let summary = events[i].summary;
                 if (dayRegex.test(summary)) {
                     dayNum = summary.match(/\d+/)[0] - 1;
 
-                    let cycleday = document.getElementById("cycleday");
                     cycleday.innerHTML = summary;
-                }
-            }
-
-            if (dayNum === 0  || countingDown) return;
-
-            let currentBlock = document.getElementById("currentblock");
-            let currentBlockName = document.getElementById("currentblockname");
-            let currentBlockColor = document.getElementById("currentblockcolor");
-            let currentBlockTimespan = document.getElementById("currentblocktimespan");
-
-            let nextBlock = document.getElementById("nextblock");
-            let nextBlockName = document.getElementById("nextblockname");
-            let nextBlockColor = document.getElementById("nextblockcolor");
-            let nextBlockTimespan = document.getElementById("nextblocktimespan");
-            if (before(0)) {
-                currentBlock.style.backgroundColor = "Gray";
-                currentBlockName.innerHTML = "Currently: ";
-                currentBlockColor.innerHTML = "No Classes";
-                currentBlockTimespan.innerHTML = "";
-
-                setNextBlock(0, dayNum);
-                return;
-            } else if (after(6)) {
-                currentBlock.style.backgroundColor = "Gray";
-                currentBlockName.innerHTML = "Currently: ";
-                currentBlockColor.innerHTML = "No Classes";
-                currentBlockTimespan.innerHTML = "2:30";
-
-                nextBlock.style.backgroundColor = "Gray";
-                nextBlockName.innerHTML = "";
-                nextBlockColor.innerHTML = "";
-                nextBlockTimespan.innerHTML = "";
-            }
-            for (let i = 0; i < timespans.length; i++) {
-                if (within(i)) {
-                    setCurrentBlock(i, dayNum);
-
-                    if (i === timespans.length - 1) {
-                        nextBlock.style.backgroundColor = "Gray";
-                        nextBlockName.innerHTML = "Next: ";
-                        nextBlockColor.innerHTML = "No Classes";
-                        nextBlockTimespan.innerHTML = "2:30"
-                    } else {
-                        setNextBlock(i + 1, dayNum);
-                    }
-
-                    break;
-                } else if (after(i) && before(i + 1) && !countingDown) {
-                    currentBlock.style.backgroundColor = "Gray";
-                    currentBlockName.innerHTML = "Time to Class: ";
-                    nextClass = new Date();
-                    nextClass.setHours(timespans[i + 1][0]);
-                    nextClass.setMinutes(timespans[i + 1][1]);
-                    nextClass.setSeconds(0);
-                    nextClass.setMilliseconds(0);
-                    countdownIntervalHandle = setInterval(updateCountdown, 100);
-                    updateCountdown();
-
-                    currentBlockTimespan.innerHTML = "";
-                    countingDown = true;
-
-                    setNextBlock(i + 1, dayNum);
                 }
             }
         }
@@ -277,6 +283,20 @@ function updateDate() {
 }
 
 window.addEventListener("load",function() {
+    timeElement = document.getElementById("time");
+    dateElement = document.getElementById("date");
+    cycleday = document.getElementById("cycleday");
+
+    currentBlock = document.getElementById("currentblock");
+    currentBlockName = document.getElementById("currentblockname");
+    currentBlockColor = document.getElementById("currentblockcolor");
+    currentBlockTimespan = document.getElementById("currentblocktimespan");
+
+    nextBlock = document.getElementById("nextblock");
+    nextBlockName = document.getElementById("nextblockname");
+    nextBlockColor = document.getElementById("nextblockcolor");
+    nextBlockTimespan = document.getElementById("nextblocktimespan");
+
     updateDate();
     updateTime();
     setInterval(updateDate, 60 * 1000);
