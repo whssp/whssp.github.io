@@ -315,7 +315,7 @@ function updateDate() {
                     } else {
                         timespans = normalTimespans;
                         blockColors = normalBlockColors;
-                        blockColors = halfDayBlockColors;
+                        blockColors = normalBlockColors;
                     }
                     cycleday.innerHTML = summary;
                 }
