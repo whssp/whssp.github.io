@@ -1,5 +1,10 @@
 let tweets = [];
 
+let scores = [];
+let scoreIndex = 0;
+
+let sports;
+
 let config = {
     "profile": {"screenName": "wellesleysports"},
     "domId": "",
@@ -18,7 +23,7 @@ let config = {
 function handleTweets(twts){
     if (twts.length > 0) tweets = twts;
 
-    updateMarquee();
+    updateScores();
 }
 
 function removeTrailingSpaces(str) {
@@ -28,16 +33,20 @@ function removeTrailingSpaces(str) {
     return str;
 }
 
-function updateMarquee() {
+function updateScores() {
     if (tweets.length === 0) return;
-    let scrollText = " ";
+
+    scores = [];
+
     let scoreRegex = new RegExp("<br>.+[0-9]+<br>.+[0-9]");
     let specificScoreRegex = new RegExp("<br>.+?[0-9]+");
+
     for (let i = 0; i < tweets.length; i++) {
+        let scoreText = "";
         if (scoreRegex.test(tweets[i].tweet)) {
             let scoreString = tweets[i].tweet;
             gameName = scoreString.substr(0, scoreString.indexOf("<br>"));
-            scrollText += removeTrailingSpaces(gameName);
+            scoreText += removeTrailingSpaces(gameName);
 
             scoreString = scoreString.substr(scoreString.indexOf("<br>"));
 
@@ -66,17 +75,24 @@ function updateMarquee() {
                 otherScore = score1;
             }
 
-            scrollText += " VS " + otherTown + " " + ourScore + "-" + otherScore + " ";
+            scoreText += " VS " + otherTown + " " + ourScore + "-" + otherScore + " ";
+
+            scores.push(scoreText);
         }
     }
 
-    marqueeText1 = document.getElementById("text1");
-    marqueeText2 = document.getElementById("text2");
+    scrollScores();
+}
 
-    marqueeText1.innerHTML = scrollText;
-    marqueeText2.innerHTML = scrollText;
+function scrollScores() {
+    sports.innerHTML = scores[scoreIndex];
+
+    if (scoreIndex >= scores.length - 1) scoreIndex = 0;
+    else scoreIndex++;
 }
 
 window.addEventListener("load", function() {
+    sports = document.getElementById("sports");
     setInterval(twitterFetcher.fetch(config), 30 * 60 * 1000);
+    setInterval(scrollScores, 5 * 1000);
 });
