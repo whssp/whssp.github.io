@@ -46,12 +46,10 @@ function within(index) {
     let minutes = now.getMinutes();
     let timespan = timespans[index];
 
-    if (hours === timespan[0]) {
-        return (hours !== timespan[2] && minutes >= timespan[1])
-            || (hours === timespan[2] && minutes < timespan[3])
-    }
-    return (hours > timespan[0] && hours < timespan[2])
-    || (hours === timespan[2] && minutes < timespan[3]);
+    return (hours === timespan[0] && ((hours !== timespan[2] && minutes >= timespan[1])
+        || (hours === timespan[2] && minutes < timespan[3])))
+        || (hours > timespan[0] && hours < timespan[2])
+        || (hours === timespan[2] && minutes < timespan[3]);
 }
 
 function before(index) {
@@ -61,7 +59,7 @@ function before(index) {
     let timespan = timespans[index];
 
     return (hours < timespan[0])
-    || (hours === timespan[0] && minutes < timespan[1]);
+        || (hours === timespan[0] && minutes < timespan[1]);
 }
 
 function after(index) {
