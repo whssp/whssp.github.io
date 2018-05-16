@@ -1,27 +1,42 @@
-function start() {
-    // Initializes the client with the API key and the Translate API.
-    gapi.client.init({
-        "apiKey": "YOUR_API_KEY",
-        "discoveryDocs": ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
-        "scope": "https://www.googleapis.com/auth/spreadsheets.readonly"
-    }).then(function() {
-        // Executes an API request, and returns a Promise.
-        // The method name `language.translations.list` comes from the API discovery.
-        return gapi.client.language.translations.list({
-            q: "hello world",
-            source: "en",
-            target: "de",
-        });
-    }).then(function(response) {
-        console.log(response.result.data.translations[0].translatedText);
-    }, function(reason) {
-        console.log("Error: " + reason.result.error.message);
-    });
-};
-
-// Loads the JavaScript client library and invokes `start` afterwards.
 function loadClient() {
-    gapi.load('client', start);
+    gapi.client.setApiKey('AIzaSyCzjAj9QlD1P_eG_1HT7KqQjbfmfSDw-TU');
+    return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/sheets/v4/rest")
+        .then(function () {
+                execute();
+            },
+            function (err) {
+                console.error("Error loading GAPI client for API", err);
+            });
 }
 
-loadClient();
+// Make sure the client is loaded before calling this method.
+function updateArray() {
+    let title = document.getElementById("titleHeader");
+    let titleArray;
+
+    return gapi.client.sheets.spreadsheets.values.get({
+        "spreadsheetId": "1Vlo2zrJM6Hz05T4_ux96p4EhaQVX9p_WJ0xMw3Lsj6s",
+        "range": "A1:B8",
+        "dateTimeRenderOption": "FORMATTED_STRING",
+        "majorDimension": "ROWS",
+        "valueRenderOption": "FORMATTED_VALUE"
+    })
+        .then(function (response) {
+                // Handle the results here (response.result has the parsed body).
+                titleArray = response["result"]["values"];
+                title.innerText = titleArray[1][0];
+
+            },
+            function (err) {
+                console.error("Execute error", err);
+            });
+
+
+}
+
+
+function execute() {
+    updateArray();
+}
+
+gapi.load("client");
