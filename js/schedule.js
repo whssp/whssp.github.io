@@ -105,7 +105,7 @@ function updateCountdown() {
         let now = new Date();
         let timeDiff = nextClass.getTime() - now.getTime();
         let minutes = Math.floor(timeDiff / 60000);
-        let seconds = Math.floor(timeDiff / 1000) % 60;
+        let seconds = Math.round(timeDiff / 1000) % 60;
         if (seconds < 10) {
             seconds = "0" + seconds;
         }
