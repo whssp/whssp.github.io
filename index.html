@@ -6,9 +6,14 @@
 
     <title>Wellesley HS Announcements</title>
 
+    <script src="https://apis.google.com/js/api.js"></script>
+
     <script src="js/weather.js"></script>
     <script src="js/sports.js"></script>
     <script src="js/schedule.js"></script>
+    <script src="js/annoucements.js"></script>
+
+    <script src="https://apis.google.com/js/client.js?onload=loadClient"></script>
 </head>
 <body>
     <div id="leftstack" class="leftText" style="float: left; width: 20%; height: 100%; background-color: red">
@@ -43,7 +48,7 @@
     <div id="rightstack" style="float: right; width: 80%; height: 100%; background-color: green">
         <div id="main" style="float: top; width: 100%; height: 90%; background-color: white">
             <div id="title" style="float: top; width: 100%"; height 10%>
-                <header>Title</header>
+                <header id="titleHeader">Title</header>
             </div>
         </div>
         <div id="sports" style="float: bottom; width: 100%; height: 10%; background-color: gray; vertical-align:middle">
