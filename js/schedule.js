@@ -112,7 +112,7 @@ function updateCountdown() {
         if (timeDiff < 499 || seconds === "00") {
             countingDown = false;
             clearInterval(countdownIntervalHandle);
-            updateDate();
+            updateTime();
             return;
         }
         currentBlockColor.innerHTML = minutes + ":" + seconds;
