@@ -46,8 +46,11 @@ function within(index) {
     let minutes = now.getMinutes();
     let timespan = timespans[index];
 
-    return (hours === timespan[0] && minutes >= timespan[1])
-    || (hours > timespan[0] && hours < timespan[2])
+    if (hours === timespan[0]) {
+        return (hours !== timespan[2] && minutes >= timespan[1])
+            || (hours === timespan[2] && minutes < timespan[3])
+    }
+    return (hours > timespan[0] && hours < timespan[2])
     || (hours === timespan[2] && minutes < timespan[3]);
 }
 
@@ -173,6 +176,8 @@ function updateTime() {
             countingDown = true;
 
             setNextBlock(i + 1, dayNum);
+
+            break;
         }
     }
 }
