@@ -1,7 +1,21 @@
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-let blockNames = ["Block 1", "Block 2", "Advisory", "Block 3", "Block 4", "Block 5", "Block 6"];
 
-let blockColors = [
+const normalBlockNames = ["Block 1", "Block 2", "Advisory", "Block 3", "Block 4", "Block 5", "Block 6"];
+
+const halfDayBlockNames = ["Block 1", "Block 2", "Block 3", "Block 4", "Block 5", "Block 6", "Advisory"];
+
+let blockNames = normalBlockNames;
+
+const halfDayBlockColors = [
+    ["Gray", "Orange", "Yellow", "Green", "Red", "Blue", "Gray"],
+    ["Gray", "Yellow", "Orange", "Tan", "Red", "Purple", "Gray"],
+    ["Gray", "Green", "Orange", "Tan", "Purple", "Blue", "Gray"],
+    ["Gray", "Tan", "Yellow", "Green", "Red", "Blue", "Gray"],
+    ["Gray", "Red", "Orange", "Yellow", "Purple", "Blue", "Gray"],
+    ["Gray", "Purple", "Orange", "Green", "Tan", "Red", "Gray"],
+    ["Gray", "Blue", "Yellow", "Green", "Tan", "Purple", "Gray"]
+];
+const normalBlockColors = [
     ["Gray", "Orange", "Gray", "Yellow", "Green", "Red", "Blue"],
     ["Gray", "Yellow", "Gray", "Orange", "Tan", "Red", "Purple"],
     ["Gray", "Green", "Gray", "Orange", "Tan", "Purple", "Blue"],
@@ -11,7 +25,19 @@ let blockColors = [
     ["Gray", "Blue" ,"Gray", "Yellow", "Green", "Tan", "Purple",]
 ];
 
-let timespans = [
+let blockColors = normalBlockColors;
+
+const halfDayTimespans = [
+    [7, 30, 8, 0],
+    [8, 5, 8, 35],
+    [8, 40, 9, 10],
+    [9, 15, 9, 45],
+    [9, 50, 10, 20],
+    [10, 25, 10, 55],
+    [11, 0, 11, 30]
+];
+
+const normalTimespans = [
     [7, 30, 8, 29],
     [8, 34, 9, 33],
     [9, 38, 9, 46],
@@ -20,6 +46,8 @@ let timespans = [
     [12, 27, 13, 26],
     [13, 31, 14, 30]
 ];
+
+let timespans = normalTimespans;
 
 let countingDown = false;
 let nextClass = new Date();
@@ -46,9 +74,10 @@ function within(index) {
     let minutes = now.getMinutes();
     let timespan = timespans[index];
 
-    return (hours === timespan[0] && minutes >= timespan[1])
-    || (hours > timespan[0] && hours < timespan[2])
-    || (hours === timespan[2] && minutes < timespan[3]);
+    return (hours === timespan[0] && ((hours !== timespan[2] && minutes >= timespan[1])
+        || (hours === timespan[2] && minutes < timespan[3])))
+        || (hours > timespan[0] && hours < timespan[2])
+        || (hours === timespan[2] && minutes < timespan[3]);
 }
 
 function before(index) {
@@ -58,7 +87,7 @@ function before(index) {
     let timespan = timespans[index];
 
     return (hours < timespan[0])
-    || (hours === timespan[0] && minutes < timespan[1]);
+        || (hours === timespan[0] && minutes < timespan[1]);
 }
 
 function after(index) {
@@ -76,14 +105,14 @@ function updateCountdown() {
         let now = new Date();
         let timeDiff = nextClass.getTime() - now.getTime();
         let minutes = Math.floor(timeDiff / 60000);
-        let seconds = Math.floor(timeDiff / 1000) % 60;
+        let seconds = Math.round(timeDiff / 1000) % 60;
         if (seconds < 10) {
             seconds = "0" + seconds;
         }
         if (timeDiff < 499 || seconds === "00") {
             countingDown = false;
             clearInterval(countdownIntervalHandle);
-            updateDate();
+            updateTime();
             return;
         }
         currentBlockColor.innerHTML = minutes + ":" + seconds;
@@ -129,6 +158,7 @@ function updateTime() {
         currentBlockTimespan.innerHTML = "";
 
         setNextBlock(0, dayNum);
+
         return;
     } else if (after(6)) {
         currentBlock.style.backgroundColor = "Gray";
@@ -140,6 +170,8 @@ function updateTime() {
         nextBlockName.innerHTML = "";
         nextBlockColor.innerHTML = "";
         nextBlockTimespan.innerHTML = "";
+
+        return;
     }
     for (let i = 0; i < timespans.length; i++) {
         if (within(i)) {
@@ -170,6 +202,8 @@ function updateTime() {
             countingDown = true;
 
             setNextBlock(i + 1, dayNum);
+
+            break;
         }
     }
 }
@@ -274,7 +308,15 @@ function updateDate() {
                 let summary = events[i].summary;
                 if (dayRegex.test(summary)) {
                     dayNum = summary.match(/\d+/)[0] - 1;
-
+                    if (summary.indexOf("Half") !== -1) {
+                        timespans = halfDayTimespans;
+                        blockColors = halfDayBlockColors;
+                        blockNames = halfDayBlockNames;
+                    } else {
+                        timespans = normalTimespans;
+                        blockColors = normalBlockColors;
+                        blockColors = normalBlockColors;
+                    }
                     cycleday.innerHTML = summary;
                 }
             }
