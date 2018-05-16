@@ -21,16 +21,23 @@ function handleTweets(twts){
     updateMarquee();
 }
 
+function removeTrailingSpaces(str) {
+    while (str.charAt(str.length - 1) === " ") {
+        str = str.substr(0, str.length - 1);
+    }
+    return str;
+}
+
 function updateMarquee() {
     if (tweets.length === 0) return;
-    let scrollText = "";
+    let scrollText = " ";
     let scoreRegex = new RegExp("<br>.+[0-9]+<br>.+[0-9]");
     let specificScoreRegex = new RegExp("<br>.+?[0-9]+");
     for (let i = 0; i < tweets.length; i++) {
         if (scoreRegex.test(tweets[i].tweet)) {
             let scoreString = tweets[i].tweet;
             gameName = scoreString.substr(0, scoreString.indexOf("<br>"));
-            scrollText += gameName;
+            scrollText += removeTrailingSpaces(gameName);
 
             scoreString = scoreString.substr(scoreString.indexOf("<br>"));
 
