@@ -1,9 +1,14 @@
 let tweets = [];
 
-let scores = [];
-let scoreIndex = 0;
+let gameNames = [];
+let homeScores = [];
+let otherScores = [];
 
-let sports;
+let gameIndex = 0;
+
+let sportName;
+let score1;
+let score2;
 
 let config = {
     "profile": {"screenName": "wellesleysports"},
@@ -36,17 +41,21 @@ function removeTrailingSpaces(str) {
 function updateScores() {
     if (tweets.length === 0) return;
 
-    scores = [];
+    gameNames = [];
+    homeScores = [];
+    otherScores = [];
 
     let scoreRegex = new RegExp("<br>.+[0-9]+<br>.+[0-9]");
     let specificScoreRegex = new RegExp("<br>.+?[0-9]+");
 
     for (let i = 0; i < tweets.length; i++) {
-        let scoreText = "";
+        let gameName = "";
+        let homeScore = "";
+        let otherScore = "";
         if (scoreRegex.test(tweets[i].tweet)) {
             let scoreString = tweets[i].tweet;
             gameName = scoreString.substr(0, scoreString.indexOf("<br>"));
-            scoreText += removeTrailingSpaces(gameName);
+            gameName = removeTrailingSpaces(gameName);
 
             scoreString = scoreString.substr(scoreString.indexOf("<br>"));
 
@@ -63,21 +72,21 @@ function updateScores() {
             let town2 = match2.substr(0, match2.indexOf(score2) - 1);
 
             let otherTown;
-            let ourScore;
-            let otherScore;
             if (town1 === "Wellesley") {
                 otherTown = town2;
-                ourScore = score1;
+                homeScore = score1;
                 otherScore = score2;
             } else {
                 otherTown = town1;
-                ourScore = score2;
+                homeScore = score2;
                 otherScore = score1;
             }
 
-            scoreText += " VS " + otherTown + " " + ourScore + "-" + otherScore + " ";
+            gameName += " VS " + otherTown;
 
-            scores.push(scoreText);
+            gameNames.push(gameName);
+            homeScores.push(homeScore);
+            otherScores.push(otherScore);
         }
     }
 
@@ -85,14 +94,38 @@ function updateScores() {
 }
 
 function scrollScores() {
-    sports.innerHTML = scores[scoreIndex];
+    sportName.innerHTML = gameNames[gameIndex];
+    score1.innerHTML = homeScores[gameIndex];
+    score2.innerHTML = otherScores[gameIndex];
 
-    if (scoreIndex >= scores.length - 1) scoreIndex = 0;
-    else scoreIndex++;
+    if (homeScores[gameIndex] > otherScores[gameIndex]) {
+        score1.style.fontWeight = "bold";
+        score1.style.webkitTextStrokeWidth = "2px";
+
+        score2.style.fontWeight = "normal";
+        score2.style.webkitTextStrokeWidth = "0";
+    } else if (otherScores[gameIndex] > homeScores[gameIndex]) {
+        score1.style.fontWeight = "normal";
+        score1.style.webkitTextStrokeWidth = "0";
+
+        score2.style.fontWeight = "bold";
+        score2.style.webkitTextStrokeWidth = "2px";
+    } else {
+        score1.style.fontWeight = "normal";
+        score1.style.webkitTextStrokeWidth = "0";
+
+        score2.style.fontWeight = "normal";
+        score2.style.webkitTextStrokeWidth = "0";
+    }
+    if (gameIndex >= gameNames.length - 1) gameIndex = 0;
+    else gameIndex++;
 }
 
 window.addEventListener("load", function() {
-    sports = document.getElementById("sports");
+    sportName = document.getElementById("sportname");
+    score1 = document.getElementById("score1");
+    score2 = document.getElementById("score2");
+
     setInterval(twitterFetcher.fetch(config), 30 * 60 * 1000);
     setInterval(scrollScores, 5 * 1000);
 });
