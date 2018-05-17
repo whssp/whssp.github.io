@@ -1,11 +1,13 @@
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
+// Lookup tables for the names of the blocks, ordered differently on half-days.
 const normalBlockNames = ["Block 1", "Block 2", "Advisory", "Block 3", "Block 4", "Block 5", "Block 6"];
 
 const halfDayBlockNames = ["Block 1", "Block 2", "Block 3", "Block 4", "Block 5", "Block 6", "Advisory"];
 
 let blockNames = normalBlockNames;
 
+// Lookup tables for block colors, also ordered differently on half-days (advisory is last).
 const halfDayBlockColors = [
     ["Gray", "Orange", "Yellow", "Green", "Red", "Blue", "Gray"],
     ["Gray", "Yellow", "Orange", "Tan", "Red", "Purple", "Gray"],
@@ -15,6 +17,7 @@ const halfDayBlockColors = [
     ["Gray", "Purple", "Orange", "Green", "Tan", "Red", "Gray"],
     ["Gray", "Blue", "Yellow", "Green", "Tan", "Purple", "Gray"]
 ];
+
 const normalBlockColors = [
     ["Gray", "Orange", "Gray", "Yellow", "Green", "Red", "Blue"],
     ["Gray", "Yellow", "Gray", "Orange", "Tan", "Red", "Purple"],
@@ -27,6 +30,7 @@ const normalBlockColors = [
 
 let blockColors = normalBlockColors;
 
+// Lookup tables for block timespans, 24-hour time, format is [start hour, start minute, end hour, end minute].
 const halfDayTimespans = [
     [7, 30, 8, 0],
     [8, 5, 8, 35],
@@ -49,11 +53,15 @@ const normalTimespans = [
 
 let timespans = normalTimespans;
 
+// The current day of the cycle, with -1 being an error case.
+let dayNum = -1;
+
+// Various things for the countdown clock.
 let countingDown = false;
 let nextClass = new Date();
-let dayNum = -1;
 let countdownIntervalHandle;
 
+// HTML Elements
 let timeElement;
 let dateElement;
 let cycleDay;
@@ -68,18 +76,21 @@ let nextBlockName;
 let nextBlockColor;
 let nextBlockTimespan;
 
+// Returns true if current time is >= start of the indexed timespan and < end of it.
 function within(index) {
     let now = new Date();
     let hours = now.getHours();
     let minutes = now.getMinutes();
     let timespan = timespans[index];
 
+    // Don't try to understand this expression; just understand that it works.
     return (hours === timespan[0] && ((hours !== timespan[2] && minutes >= timespan[1])
         || (hours === timespan[2] && minutes < timespan[3])))
         || (hours > timespan[0] && hours < timespan[2])
         || (hours === timespan[2] && minutes < timespan[3]);
 }
 
+// Returns true if time < start of the indexed timespan.
 function before(index) {
     let now = new Date();
     let hours = now.getHours();
@@ -90,6 +101,7 @@ function before(index) {
         || (hours === timespan[0] && minutes < timespan[1]);
 }
 
+// Returns true if time >= end of the indexed timespan.
 function after(index) {
     let now = new Date();
     let hours = now.getHours();
@@ -100,10 +112,12 @@ function after(index) {
         || (hours === timespan[2] && minutes >= timespan[3]);
 }
 
+// Updates the timer to the next block, only hooked up while counting down.
 function updateCountdown() {
     if (countingDown) {
         let now = new Date();
         let timeDiff = nextClass.getTime() - now.getTime();
+        // If we're being honest here, I don't know why this results in the countdown that is seemingly most accurate to the system clock, but it does.
         let minutes = Math.floor((timeDiff + 1000) / 60000);
         let seconds = Math.ceil(timeDiff / 1000) % 60;
         if (seconds < 10) {
@@ -119,6 +133,7 @@ function updateCountdown() {
     }
 }
 
+// Update the current time and color block, also triggers the countdown if inbetween blocks.
 function updateTime() {
     let now = new Date();
 
@@ -137,6 +152,7 @@ function updateTime() {
 
 
     if (countingDown) return;
+    // dayNum should only be -1 if it was not yet set / not found on the current calendar day.
     if (dayNum === -1) {
         currentBlock.style.backgroundColor = "Gray";
         currentBlockName.innerHTML = "";
@@ -151,6 +167,7 @@ function updateTime() {
         return;
     }
 
+    // Case for when we're before the first block.
     if (before(0)) {
         currentBlock.style.backgroundColor = "Gray";
         currentBlockName.innerHTML = "Currently: ";
@@ -160,6 +177,7 @@ function updateTime() {
         setNextBlock(0, dayNum);
 
         return;
+        // Case for when we're after the last block.
     } else if (after(6)) {
         currentBlock.style.backgroundColor = "Gray";
         currentBlockName.innerHTML = "Currently: ";
@@ -174,6 +192,7 @@ function updateTime() {
         return;
     }
     for (let i = 0; i < timespans.length; i++) {
+        // Check if we're currently in the block at index i.
         if (within(i)) {
             setCurrentBlock(i, dayNum);
 
@@ -187,14 +206,18 @@ function updateTime() {
             }
 
             break;
+            // Check if we're between the blocks at index i and i + 1.
         } else if (after(i) && before(i + 1) && !countingDown) {
             currentBlock.style.backgroundColor = "Gray";
             currentBlockName.innerHTML = "Time to Class: ";
+
+            // Start and hook up the countdown to the next block.
             nextClass = new Date();
             nextClass.setHours(timespans[i + 1][0]);
             nextClass.setMinutes(timespans[i + 1][1]);
             nextClass.setSeconds(0);
             nextClass.setMilliseconds(0);
+            // Update countdown to next block every 100 ms.
             countdownIntervalHandle = setInterval(updateCountdown, 100);
             updateCountdown();
 
@@ -208,9 +231,7 @@ function updateTime() {
     }
 }
 
-/**
- * @return {string}
- */
+// Copy-pasted from stack-overflow, formats time how the google api wants it.
 function ISODateString(d){
     function pad(n){return n<10 ? "0"+n : n}
     return d.getUTCFullYear() + "-"
@@ -221,6 +242,15 @@ function ISODateString(d){
         + pad(d.getUTCSeconds()) + "Z"
 }
 
+// Convert 24 hour time to 12 hour time.
+function to12Hour(hour) {
+    hour %= 12;
+    if (hour === 0) hour = 12;
+
+    return hour;
+}
+
+// Sets the next block section with the indexed data.
 function setNextBlock(index, dayNum) {
     let nextTimespan = timespans[index];
 
@@ -238,15 +268,20 @@ function setNextBlock(index, dayNum) {
         nextBlockColor.innerHTML = nextColor;
     }
 
-    let nextHourStart = nextTimespan[0] % 12;
-    if (nextHourStart === 0) nextHourStart = 12;
+    // Use black text when color is yellow for better contrast.
+    if (nextColor === "Yellow") {
+        nextBlock.style.color = "Black";
+    } else {
+        nextBlock.style.color = "White";
+    }
 
-    let nextHourEnd = nextTimespan[2] % 12;
-    if (nextHourEnd === 0) nextHourEnd = 12;
+    let nextHourStart = to12Hour(nextTimespan[0]);
+    let nextHourEnd = to12Hour(nextTimespan[2]);
 
     nextBlockTimespan.innerHTML = nextHourStart + ":" + nextTimespan[1] + " - " + nextHourEnd + ":" + nextTimespan[3];
 }
 
+// Sets the current block section with the indexed data.
 function setCurrentBlock(index, dayNum) {
 
     let timespan = timespans[index];
@@ -263,15 +298,24 @@ function setCurrentBlock(index, dayNum) {
         currentBlockColor.innerHTML = color;
     }
 
-    let hourStart = timespan[0] % 12;
-    if (hourStart === 0) hourStart = 12;
+    // Use black text when the color is yellow for better contrast.
+    if (color === "Yellow") {
+        currentBlock.style.color = "Black";
+    } else {
+        currentBlock.style.color = "White";
+    }
 
-    let hourEnd = timespan[2] % 12;
-    if (hourEnd === 0) hourEnd = 12;
+    let hourStart = to12Hour(timespan[0]);
+    let hourEnd = to12Hour(timespan[2]);
 
     currentBlockTimespan.innerHTML = hourStart + ":" + timespan[1] + " - " + hourEnd + ":" + timespan[3];
 }
 
+/*
+Update the day number and date.
+The day number is found by searching for something matching the pattern "Day [number]" in the google calendar on the current day.
+If the world "Half" precedes "Day" then we consider it to be a half day.
+ */
 function updateDate() {
     let now = new Date();
 
@@ -290,6 +334,7 @@ function updateDate() {
     let todayTimestamp = ISODateString(today);
     let tomorrowTimestamp = ISODateString(tomorrow);
 
+    // Call into the google calendar api.
     let req = new XMLHttpRequest();
     let reqURL = "https://www.googleapis.com/calendar/v3/calendars/7b7lqip1244c4k7d9pdl6hair746q2nd%40import.calendar.google.com/events?key=AIzaSyCzjAj9QlD1P_eG_1HT7KqQjbfmfSDw-TU&timeMin=" + todayTimestamp + "&timeMax=" + tomorrowTimestamp;
     req.open("GET", reqURL, true);
@@ -297,9 +342,10 @@ function updateDate() {
 
     req.onreadystatechange = processRequest;
 
+    // Matches anything containing "Day [Number]" including "Half Day [Number]".
     let dayRegex = new RegExp("Day\\s[1-7]");
 
-
+    // Callback to process returned calendar data, to avoid hanging javascript execution.
     function processRequest() {
         if (req.readyState === 4 && req.status === 200) {
             let calendar = JSON.parse(req.responseText);
@@ -324,6 +370,7 @@ function updateDate() {
     }
 }
 
+// We need to wait for the dom to be ready before calling into it.
 window.addEventListener("load",function() {
     timeElement = document.getElementById("time");
     dateElement = document.getElementById("date");
@@ -341,6 +388,8 @@ window.addEventListener("load",function() {
 
     updateDate();
     updateTime();
+    // Update the date once a minute.
     setInterval(updateDate, 60 * 1000);
+    // Update the time once a second.
     setInterval(updateTime, 1000);
 });
