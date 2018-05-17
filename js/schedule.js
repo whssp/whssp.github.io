@@ -53,6 +53,9 @@ const normalTimespans = [
 
 let timespans = normalTimespans;
 
+// Date object for current time. Used across a few different functions and declared here to save memory.
+let now;
+
 // The current day of the cycle, with -1 being an error case.
 let dayNum = -1;
 
@@ -78,7 +81,6 @@ let nextBlockTimespan;
 
 // Returns true if current time is >= start of the indexed timespan and < end of it.
 function within(index) {
-    let now = new Date();
     let hours = now.getHours();
     let minutes = now.getMinutes();
     let timespan = timespans[index];
@@ -92,7 +94,6 @@ function within(index) {
 
 // Returns true if time < start of the indexed timespan.
 function before(index) {
-    let now = new Date();
     let hours = now.getHours();
     let minutes = now.getMinutes();
     let timespan = timespans[index];
@@ -103,7 +104,6 @@ function before(index) {
 
 // Returns true if time >= end of the indexed timespan.
 function after(index) {
-    let now = new Date();
     let hours = now.getHours();
     let minutes = now.getMinutes();
     let timespan = timespans[index];
@@ -115,7 +115,7 @@ function after(index) {
 // Updates the timer to the next block, only hooked up while counting down.
 function updateCountdown() {
     if (countingDown) {
-        let now = new Date();
+        now = new Date();
         let timeDiff = nextClass.getTime() - now.getTime();
         // If we're being honest here, I don't know why this results in the countdown that is seemingly most accurate to the system clock, but it does.
         let minutes = Math.floor((timeDiff + 1000) / 60000);
@@ -135,7 +135,7 @@ function updateCountdown() {
 
 // Update the current time and color block, also triggers the countdown if inbetween blocks.
 function updateTime() {
-    let now = new Date();
+    now = new Date();
 
     let hours = now.getHours();
     let hour = hours % 12;
@@ -317,8 +317,6 @@ The day number is found by searching for something matching the pattern "Day [nu
 If the world "Half" precedes "Day" then we consider it to be a half day.
  */
 function updateDate() {
-    let now = new Date();
-
     let minutes = now.getMinutes();
     let hours = now.getHours();
     let day = now.getDate();
@@ -385,6 +383,8 @@ window.addEventListener("load",function() {
     nextBlockName = document.getElementById("nextblockname");
     nextBlockColor = document.getElementById("nextblockcolor");
     nextBlockTimespan = document.getElementById("nextblocktimespan");
+
+    now = new Date();
 
     updateDate();
     updateTime();
