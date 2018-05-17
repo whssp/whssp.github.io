@@ -34,7 +34,26 @@ async function execute() {
 
     titleArray = await updateArray();
 
-    title.innerText = titleArray[1][0];
+    await loopTimeout(0, titleArray.length, 2 * 1000, function (i){
+        title.innerText = titleArray[i][0];
+    });
+}
+
+function loopTimeout(i, max, interval, func) {
+    if (i >= max) {
+        execute();
+        return;
+    }
+
+    // Call the function
+    func(i);
+
+    i++;
+
+    // "loop"
+    setTimeout(function() {
+        loopTimeout(i, max, interval, func);
+    }, interval);
 }
 
 gapi.load("client");
