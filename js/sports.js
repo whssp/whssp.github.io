@@ -1,15 +1,27 @@
+/*
+!!!! IMPORTANT !!!!
+We cannot call into twitter's api from the browser, so we use the third party script at:
+https://github.com/jasonmayes/Twitter-Post-Fetcher
+This will almost certainly break when twitter update their website design.
+ */
+
+// Array of the text of the fetched tweets.
 let tweets = [];
 
+// The name of the game and scores extracted from the tweets.
 let gameNames = [];
 let homeScores = [];
 let otherScores = [];
 
+// Index of the game currently being displayed on the bar.
 let gameIndex = 0;
 
+// Document elements for displaying score information.
 let sportName;
 let score1;
 let score2;
 
+// Config object as described in https://github.com/jasonmayes/Twitter-Post-Fetcher/blob/master/js/exampleUsage.js
 let config = {
     "profile": {"screenName": "wellesleysports"},
     "domId": "",
@@ -24,13 +36,14 @@ let config = {
     "dataOnly": true
 };
 
-
+// Callback that populates tweet array.
 function handleTweets(twts){
     if (twts.length > 0) tweets = twts;
 
     updateScores();
 }
 
+// Remove spaces at the end of a string.
 function removeTrailingSpaces(str) {
     while (str.charAt(str.length - 1) === " ") {
         str = str.substr(0, str.length - 1);
@@ -38,14 +51,23 @@ function removeTrailingSpaces(str) {
     return str;
 }
 
+// Extracts information from tweet array and populates game data arrays.
 function updateScores() {
     if (tweets.length === 0) return;
 
+    // Clear the game data arrays.
     gameNames = [];
     homeScores = [];
     otherScores = [];
 
+    /*
+    This regex matches the following format:
+    [Game Name]
+    [Town 1] [Score]
+    [Town 2] [Score]
+     */
     let scoreRegex = new RegExp("<br>.+[0-9]+<br>.+[0-9]");
+    // This regex should match "[Linebreak (\n)] [Town] [Score]
     let specificScoreRegex = new RegExp("<br>.+?[0-9]+");
 
     for (let i = 0; i < tweets.length; i++) {
@@ -71,6 +93,7 @@ function updateScores() {
             let town1 = match1.substr(0, match1.indexOf(score1) - 1);
             let town2 = match2.substr(0, match2.indexOf(score2) - 1);
 
+            // Determine which score is ours and which is the other town.
             let otherTown;
             if (town1 === "Wellesley") {
                 otherTown = town2;
@@ -93,11 +116,13 @@ function updateScores() {
     scrollScores();
 }
 
+// Changes the sports display to the next score in the game data arrays.
 function scrollScores() {
     sportName.innerHTML = gameNames[gameIndex];
     score1.innerHTML = homeScores[gameIndex];
     score2.innerHTML = otherScores[gameIndex];
 
+    // The winning score is bolded and outlined.
     if (homeScores[gameIndex] > otherScores[gameIndex]) {
         score1.style.fontWeight = "bold";
         score1.style.webkitTextStrokeWidth = "3px";
@@ -117,15 +142,20 @@ function scrollScores() {
         score2.style.fontWeight = "normal";
         score2.style.webkitTextStrokeWidth = "0";
     }
+
+    // Wrap around to beginning of array if at the end.
     if (gameIndex >= gameNames.length - 1) gameIndex = 0;
     else gameIndex++;
 }
 
+// Only call into the dom once it's loaded.
 window.addEventListener("load", function() {
     sportName = document.getElementById("sportname");
     score1 = document.getElementById("score1");
     score2 = document.getElementById("score2");
 
+    // Update the tweets every 30 minutes.
     setInterval(twitterFetcher.fetch(config), 30 * 60 * 1000);
+    // Change the displayed score every 5 seconds.
     setInterval(scrollScores, 5 * 1000);
 });

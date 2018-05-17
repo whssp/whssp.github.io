@@ -116,6 +116,7 @@ function updateCountdown() {
     if (countingDown) {
         let now = new Date();
         let timeDiff = nextClass.getTime() - now.getTime();
+        // If we're being honest here, I don't know why this results in the countdown that is seemingly most accurate to the system clock, but it does.
         let minutes = Math.floor((timeDiff + 1000) / 60000);
         let seconds = Math.ceil(timeDiff / 1000) % 60;
         if (seconds < 10) {
@@ -150,6 +151,7 @@ function updateTime() {
 
 
     if (countingDown) return;
+    // dayNum should only be -1 if it was not yet set / not found on the current calendar day.
     if (dayNum === -1) {
         currentBlock.style.backgroundColor = "Gray";
         currentBlockName.innerHTML = "";
@@ -164,6 +166,7 @@ function updateTime() {
         return;
     }
 
+    // Case for when we're before the first block.
     if (before(0)) {
         currentBlock.style.backgroundColor = "Gray";
         currentBlockName.innerHTML = "Currently: ";
@@ -173,6 +176,7 @@ function updateTime() {
         setNextBlock(0, dayNum);
 
         return;
+        // Case for when we're after the last block.
     } else if (after(6)) {
         currentBlock.style.backgroundColor = "Gray";
         currentBlockName.innerHTML = "Currently: ";
@@ -187,6 +191,7 @@ function updateTime() {
         return;
     }
     for (let i = 0; i < timespans.length; i++) {
+        // Check if we're currently in the block at index i.
         if (within(i)) {
             setCurrentBlock(i, dayNum);
 
@@ -200,14 +205,18 @@ function updateTime() {
             }
 
             break;
+            // Check if we're between the blocks at index i and i + 1.
         } else if (after(i) && before(i + 1) && !countingDown) {
             currentBlock.style.backgroundColor = "Gray";
             currentBlockName.innerHTML = "Time to Class: ";
+
+            // Start and hook up the countdown to the next block.
             nextClass = new Date();
             nextClass.setHours(timespans[i + 1][0]);
             nextClass.setMinutes(timespans[i + 1][1]);
             nextClass.setSeconds(0);
             nextClass.setMilliseconds(0);
+            // Update countdown to next block every 100 ms.
             countdownIntervalHandle = setInterval(updateCountdown, 100);
             updateCountdown();
 
@@ -246,10 +255,11 @@ function setNextBlock(index, dayNum) {
 
     if (nextColor === "Gray") {
         nextBlockColor.innerHTML = "";
-    } else {r
+    } else {
         nextBlockColor.innerHTML = nextColor;
     }
 
+    // Convert 24-hour time to 12-hour time.
     let nextHourStart = nextTimespan[0] % 12;
     if (nextHourStart === 0) nextHourStart = 12;
 
@@ -276,6 +286,7 @@ function setCurrentBlock(index, dayNum) {
         currentBlockColor.innerHTML = color;
     }
 
+    // Convert 24-hour time to 12-hour time.
     let hourStart = timespan[0] % 12;
     if (hourStart === 0) hourStart = 12;
 
@@ -308,6 +319,7 @@ function updateDate() {
     let todayTimestamp = ISODateString(today);
     let tomorrowTimestamp = ISODateString(tomorrow);
 
+    // Call into the google calendar api.
     let req = new XMLHttpRequest();
     let reqURL = "https://www.googleapis.com/calendar/v3/calendars/7b7lqip1244c4k7d9pdl6hair746q2nd%40import.calendar.google.com/events?key=AIzaSyCzjAj9QlD1P_eG_1HT7KqQjbfmfSDw-TU&timeMin=" + todayTimestamp + "&timeMax=" + tomorrowTimestamp;
     req.open("GET", reqURL, true);
@@ -315,9 +327,10 @@ function updateDate() {
 
     req.onreadystatechange = processRequest;
 
+    // Matches anything containing "Day [Number]" including "Half Day [Number]".
     let dayRegex = new RegExp("Day\\s[1-7]");
 
-
+    // Callback to process returned calendar data, to avoid hanging javascript execution.
     function processRequest() {
         if (req.readyState === 4 && req.status === 200) {
             let calendar = JSON.parse(req.responseText);
@@ -360,6 +373,8 @@ window.addEventListener("load",function() {
 
     updateDate();
     updateTime();
+    // Update the date once a minute.
     setInterval(updateDate, 60 * 1000);
+    // Update the time once a second.
     setInterval(updateTime, 1000);
 });
