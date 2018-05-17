@@ -125,7 +125,7 @@ function scrollScores() {
     // The winning score is bolded and outlined.
     if (homeScores[gameIndex] > otherScores[gameIndex]) {
         score1.style.fontWeight = "bold";
-        score1.style.webkitTextStrokeWidth = "3px";
+        score1.style.webkitTextStrokeWidth = "0.5vh";
 
         score2.style.fontWeight = "normal";
         score2.style.webkitTextStrokeWidth = "0";
@@ -134,7 +134,7 @@ function scrollScores() {
         score1.style.webkitTextStrokeWidth = "0";
 
         score2.style.fontWeight = "bold";
-        score2.style.webkitTextStrokeWidth = "3px";
+        score2.style.webkitTextStrokeWidth = "0.5vh";
     } else {
         score1.style.fontWeight = "normal";
         score1.style.webkitTextStrokeWidth = "0";
