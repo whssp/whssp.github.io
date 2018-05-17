@@ -1,5 +1,15 @@
 let tweets = [];
 
+let gameNames = [];
+let homeScores = [];
+let otherScores = [];
+
+let gameIndex = 0;
+
+let sportName;
+let score1;
+let score2;
+
 let config = {
     "profile": {"screenName": "wellesleysports"},
     "domId": "",
@@ -18,7 +28,7 @@ let config = {
 function handleTweets(twts){
     if (twts.length > 0) tweets = twts;
 
-    updateMarquee();
+    updateScores();
 }
 
 function removeTrailingSpaces(str) {
@@ -28,16 +38,24 @@ function removeTrailingSpaces(str) {
     return str;
 }
 
-function updateMarquee() {
+function updateScores() {
     if (tweets.length === 0) return;
-    let scrollText = " ";
+
+    gameNames = [];
+    homeScores = [];
+    otherScores = [];
+
     let scoreRegex = new RegExp("<br>.+[0-9]+<br>.+[0-9]");
     let specificScoreRegex = new RegExp("<br>.+?[0-9]+");
+
     for (let i = 0; i < tweets.length; i++) {
+        let gameName = "";
+        let homeScore = "";
+        let otherScore = "";
         if (scoreRegex.test(tweets[i].tweet)) {
             let scoreString = tweets[i].tweet;
             gameName = scoreString.substr(0, scoreString.indexOf("<br>"));
-            scrollText += removeTrailingSpaces(gameName);
+            gameName = removeTrailingSpaces(gameName);
 
             scoreString = scoreString.substr(scoreString.indexOf("<br>"));
 
@@ -54,29 +72,60 @@ function updateMarquee() {
             let town2 = match2.substr(0, match2.indexOf(score2) - 1);
 
             let otherTown;
-            let ourScore;
-            let otherScore;
             if (town1 === "Wellesley") {
                 otherTown = town2;
-                ourScore = score1;
+                homeScore = score1;
                 otherScore = score2;
             } else {
                 otherTown = town1;
-                ourScore = score2;
+                homeScore = score2;
                 otherScore = score1;
             }
 
-            scrollText += " VS " + otherTown + " " + ourScore + "-" + otherScore + " ";
+            gameName += " VS " + otherTown;
+
+            gameNames.push(gameName);
+            homeScores.push(homeScore);
+            otherScores.push(otherScore);
         }
     }
 
-    marqueeText1 = document.getElementById("text1");
-    marqueeText2 = document.getElementById("text2");
+    scrollScores();
+}
 
-    marqueeText1.innerHTML = scrollText;
-    marqueeText2.innerHTML = scrollText;
+function scrollScores() {
+    sportName.innerHTML = gameNames[gameIndex];
+    score1.innerHTML = homeScores[gameIndex];
+    score2.innerHTML = otherScores[gameIndex];
+
+    if (homeScores[gameIndex] > otherScores[gameIndex]) {
+        score1.style.fontWeight = "bold";
+        score1.style.webkitTextStrokeWidth = "3px";
+
+        score2.style.fontWeight = "normal";
+        score2.style.webkitTextStrokeWidth = "0";
+    } else if (otherScores[gameIndex] > homeScores[gameIndex]) {
+        score1.style.fontWeight = "normal";
+        score1.style.webkitTextStrokeWidth = "0";
+
+        score2.style.fontWeight = "bold";
+        score2.style.webkitTextStrokeWidth = "3px";
+    } else {
+        score1.style.fontWeight = "normal";
+        score1.style.webkitTextStrokeWidth = "0";
+
+        score2.style.fontWeight = "normal";
+        score2.style.webkitTextStrokeWidth = "0";
+    }
+    if (gameIndex >= gameNames.length - 1) gameIndex = 0;
+    else gameIndex++;
 }
 
 window.addEventListener("load", function() {
+    sportName = document.getElementById("sportname");
+    score1 = document.getElementById("score1");
+    score2 = document.getElementById("score2");
+
     setInterval(twitterFetcher.fetch(config), 30 * 60 * 1000);
+    setInterval(scrollScores, 5 * 1000);
 });

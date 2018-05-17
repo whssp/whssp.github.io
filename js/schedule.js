@@ -104,12 +104,12 @@ function updateCountdown() {
     if (countingDown) {
         let now = new Date();
         let timeDiff = nextClass.getTime() - now.getTime();
-        let minutes = Math.floor(timeDiff / 60000);
-        let seconds = Math.round(timeDiff / 1000) % 60;
+        let minutes = Math.floor((timeDiff + 1000) / 60000);
+        let seconds = Math.ceil(timeDiff / 1000) % 60;
         if (seconds < 10) {
             seconds = "0" + seconds;
         }
-        if (timeDiff < 499 || seconds === "00") {
+        if (timeDiff < 499) {
             countingDown = false;
             clearInterval(countdownIntervalHandle);
             updateTime();
