@@ -100,7 +100,7 @@ function scrollScores() {
 
     if (homeScores[gameIndex] > otherScores[gameIndex]) {
         score1.style.fontWeight = "bold";
-        score1.style.webkitTextStrokeWidth = "2px";
+        score1.style.webkitTextStrokeWidth = "3px";
 
         score2.style.fontWeight = "normal";
         score2.style.webkitTextStrokeWidth = "0";
@@ -109,7 +109,7 @@ function scrollScores() {
         score1.style.webkitTextStrokeWidth = "0";
 
         score2.style.fontWeight = "bold";
-        score2.style.webkitTextStrokeWidth = "2px";
+        score2.style.webkitTextStrokeWidth = "3px";
     } else {
         score1.style.fontWeight = "normal";
         score1.style.webkitTextStrokeWidth = "0";
