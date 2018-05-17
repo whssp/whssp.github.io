@@ -34,7 +34,7 @@ async function execute() {
 
     titleArray = await updateArray();
 
-    await loopTimeout(0, titleArray.length, 2 * 1000, function (i){
+    await loopTimeout(1, titleArray.length, 3 * 1000, function (i){
         title.innerText = titleArray[i][0];
     });
 }
