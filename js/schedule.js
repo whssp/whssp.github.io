@@ -17,6 +17,7 @@ const halfDayBlockColors = [
     ["Gray", "Purple", "Orange", "Green", "Tan", "Red", "Gray"],
     ["Gray", "Blue", "Yellow", "Green", "Tan", "Purple", "Gray"]
 ];
+
 const normalBlockColors = [
     ["Gray", "Orange", "Gray", "Yellow", "Green", "Red", "Blue"],
     ["Gray", "Yellow", "Gray", "Orange", "Tan", "Red", "Purple"],
@@ -241,6 +242,14 @@ function ISODateString(d){
         + pad(d.getUTCSeconds()) + "Z"
 }
 
+// Convert 24 hour time to 12 hour time.
+function to12Hour(hour) {
+    hour %= 12;
+    if (hour === 0) hour = 12;
+
+    return hour;
+}
+
 // Sets the next block section with the indexed data.
 function setNextBlock(index, dayNum) {
     let nextTimespan = timespans[index];
@@ -259,12 +268,15 @@ function setNextBlock(index, dayNum) {
         nextBlockColor.innerHTML = nextColor;
     }
 
-    // Convert 24-hour time to 12-hour time.
-    let nextHourStart = nextTimespan[0] % 12;
-    if (nextHourStart === 0) nextHourStart = 12;
+    // Use black text when color is yellow for better contrast.
+    if (nextColor === "Yellow") {
+        nextBlock.style.color = "Black";
+    } else {
+        nextBlock.style.color = "White";
+    }
 
-    let nextHourEnd = nextTimespan[2] % 12;
-    if (nextHourEnd === 0) nextHourEnd = 12;
+    let nextHourStart = to12Hour(nextTimespan[0]);
+    let nextHourEnd = to12Hour(nextTimespan[2]);
 
     nextBlockTimespan.innerHTML = nextHourStart + ":" + nextTimespan[1] + " - " + nextHourEnd + ":" + nextTimespan[3];
 }
@@ -286,12 +298,15 @@ function setCurrentBlock(index, dayNum) {
         currentBlockColor.innerHTML = color;
     }
 
-    // Convert 24-hour time to 12-hour time.
-    let hourStart = timespan[0] % 12;
-    if (hourStart === 0) hourStart = 12;
+    // Use black text when the color is yellow for better contrast.
+    if (color === "Yellow") {
+        currentBlock.style.color = "Black";
+    } else {
+        currentBlock.style.color = "White";
+    }
 
-    let hourEnd = timespan[2] % 12;
-    if (hourEnd === 0) hourEnd = 12;
+    let hourStart = to12Hour(timespan[0]);
+    let hourEnd = to12Hour(timespan[2]);
 
     currentBlockTimespan.innerHTML = hourStart + ":" + timespan[1] + " - " + hourEnd + ":" + timespan[3];
 }
