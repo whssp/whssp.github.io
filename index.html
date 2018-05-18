@@ -12,52 +12,52 @@
     <script src="js/weather.js"></script>
     <script src="js/sports.js"></script>
     <script src="js/schedule.js"></script>
-    <script src="js/annoucements.js"></script>
+    <script src="js/announcements.js"></script>
 
     <script src="https://apis.google.com/js/client.js?onload=loadClient"></script>
 </head>
 <body>
-    <div id="leftstack" class="leftText" style="float: left; width: 20%; height: 100%; background-color: red">
+    <div id="leftStack" class="leftText" style="float: left; width: 20%; height: 100%; background-color: red">
         <div id="logo" class="gradient" style="height:17.5%">
             <img src="img/raider-logo.png">
         </div>
         <div id="day" style="height: 25%; background-color: #575757">
             <div id="time" style="height: 30%; font-size: 7vh; vertical-align: bottom">??:??</div>
             <div id="date" style="height: 30%; font-size: 5vh; vertical-align: top; padding-top: 1vh">? ?, ?</div>
-            <div id="cycleday" style="height: 40%; font-size: 6vh">No School</div>
+            <div id="cycleDay" style="height: 40%; font-size: 6vh">No School</div>
         </div>
-        <div id="currentblock" class="gradient" style="height:15%; background-color: gray">
-            <div id="currentblockname" style="height: 30%; font-size: 4vh;">Currently: ?</div>
-            <div id="currentblockcolor" style="height: 35%; font-size: 5vh;">????</div>
-            <div id="currentblocktimespan" style="height: 35%; font-size: 4vh">??:?? - ??:?? PM</div>
+        <div id="currentBlock" class="gradient" style="height:15%; background-color: gray">
+            <div id="currentBlockName" style="height: 30%; font-size: 4vh;">Currently: ?</div>
+            <div id="currentBlockColor" style="height: 35%; font-size: 5vh;">????</div>
+            <div id="currentBlockTimespan" style="height: 35%; font-size: 4vh">??:?? - ??:?? PM</div>
         </div>
-        <div id="nextblock" class="gradient" style="height: 15%; background-color: gray">
-            <div id="nextblockname" style="height: 30%; font-size: 4vh;">Next: ?</div>
-            <div id="nextblockcolor" style="height: 35%; font-size: 5vh;">????</div>
-            <div id="nextblocktimespan" style="height: 35%; font-size: 4vh">??:?? - ??:??</div>
+        <div id="nextBlock" class="gradient" style="height: 15%; background-color: gray">
+            <div id="nextBlockName" style="height: 30%; font-size: 4vh;">Next: ?</div>
+            <div id="nextBlockColor" style="height: 35%; font-size: 5vh;">????</div>
+            <div id="nextBlockTimespan" style="height: 35%; font-size: 4vh">??:?? - ??:??</div>
         </div>
         <div id="weather" class="gradient" style="height: 27.5%; background-color: deepskyblue">
-            <div id="currentimageholder" style="height:75%; text-align: center;">
-                <i id="currentimage" class="wi wi-day-sunny" style="color: black; font-size: 16vh; margin-top: 5vh;"></i>
+            <div id="currentImageHolder" style="height:75%; text-align: center;">
+                <i id="currentImage" class="wi wi-day-sunny" style="color: black; font-size: 16vh; margin-top: 5vh;"></i>
             </div>
-            <div id="currenttempholder" style="position: absolute; left: 0; width: 20%; top: 80%; height: 20%; text-align: center">
-                <div id ="currenttemp" style="font-size: 10vh">??&deg;</div>
+            <div id="currentTempHolder" style="position: absolute; left: 0; width: 20%; top: 80%; height: 20%; text-align: center">
+                <div id ="currentTemp" style="font-size: 10vh">??&deg;</div>
             </div>
-            <div id="minmax" style="font-size: 5.75vh; font-family: sans-serif">??&deg;/??&deg;</div>
+            <div id="minMax" style="font-size: 5.75vh; font-family: sans-serif">??&deg;/??&deg;</div>
         </div>
     </div>
-    <div id="rightstack" style="float: right; width: 80%; height: 100%; background-color: green">
+    <div id="rightStack" style="float: right; width: 80%; height: 100%; background-color: green">
         <div id="main" style="float: top; width: 100%; height: 90%; background-color: white">
             <div id="title" style="float: top; width: 100%">
                 <header id="titleHeader">Title</header>
             </div>
-            <div id="subtitle" style="float: top; width: 100%">
+            <div id="subTitle" style="float: top; width: 100%">
                 <p id="subParagraph">Subtitle goes here</p>
             </div>
         </div>
-        <div id="sportsholder" style="float: bottom; width: 100%; height: 10%; background-color: gray; text-align: center">
+        <div id="sportsHolder" style="float: bottom; width: 100%; height: 10%; background-color: gray; text-align: center">
             <div id="sports" style="vertical-align: middle; font-size: 6vh; color: white; padding-top: 1.5vh">
-                <span id="sportname"></span>
+                <span id="sportName"></span>
                 <span id="score1"></span>-<span id="score2"></span>
             </div>
         </div>

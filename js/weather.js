@@ -31,9 +31,9 @@ function updateWeather() {
 
 // Can only call into the dom once the window is actually loaded.
 window.addEventListener("load",function() {
-    minMax = document.getElementById("minmax");
-    currentTemp = document.getElementById("currenttemp");
-    currentImage = document.getElementById("currentimage");
+    minMax = document.getElementById("minMax");
+    currentTemp = document.getElementById("currentTemp");
+    currentImage = document.getElementById("currentImage");
 
     updateWeather();
     setInterval(updateWeather, 60 * 1000);

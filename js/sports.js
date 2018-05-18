@@ -150,7 +150,7 @@ function scrollScores() {
 
 // Only call into the dom once it's loaded.
 window.addEventListener("load", function() {
-    sportName = document.getElementById("sportname");
+    sportName = document.getElementById("sportName");
     score1 = document.getElementById("score1");
     score2 = document.getElementById("score2");
 

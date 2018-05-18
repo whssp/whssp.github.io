@@ -372,17 +372,17 @@ function updateDate() {
 window.addEventListener("load",function() {
     timeElement = document.getElementById("time");
     dateElement = document.getElementById("date");
-    cycleday = document.getElementById("cycleday");
+    cycleday = document.getElementById("cycleDay");
 
-    currentBlock = document.getElementById("currentblock");
-    currentBlockName = document.getElementById("currentblockname");
-    currentBlockColor = document.getElementById("currentblockcolor");
-    currentBlockTimespan = document.getElementById("currentblocktimespan");
+    currentBlock = document.getElementById("currentBlock");
+    currentBlockName = document.getElementById("currentBlockName");
+    currentBlockColor = document.getElementById("currentBlockColor");
+    currentBlockTimespan = document.getElementById("currentBlockTimespan");
 
-    nextBlock = document.getElementById("nextblock");
-    nextBlockName = document.getElementById("nextblockname");
-    nextBlockColor = document.getElementById("nextblockcolor");
-    nextBlockTimespan = document.getElementById("nextblocktimespan");
+    nextBlock = document.getElementById("nextBlock");
+    nextBlockName = document.getElementById("nextBlockName");
+    nextBlockColor = document.getElementById("nextBlockColor");
+    nextBlockTimespan = document.getElementById("nextBlockTimespan");
 
     now = new Date();
 
