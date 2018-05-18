@@ -20,7 +20,7 @@ function updateWeather() {
         if (req.readyState === 4 && req.status === 200) {
             let response = JSON.parse(req.responseText);
 
-            minMax.innerHTML =  Math.round(response.main.temp_min) + "&deg; / " + Math.round(response.main.temp_max) + "&deg;";
+            minMax.innerHTML =  Math.round(response.main.temp_min) + "&deg;/" + Math.round(response.main.temp_max) + "&deg;";
 
             currentTemp.innerHTML = Math.round(response.main.temp) + "&deg;";
 
