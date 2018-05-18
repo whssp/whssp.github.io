@@ -97,12 +97,12 @@ function updateScores() {
             let otherTown;
             if (town1 === "Wellesley") {
                 otherTown = town2;
-                homeScore = score1;
-                otherScore = score2;
+                homeScore = parseInt(score1);
+                otherScore = parseInt(score2);
             } else {
                 otherTown = town1;
-                homeScore = score2;
-                otherScore = score1;
+                homeScore = parseInt(score2);
+                otherScore = parseInt(score1);
             }
 
             gameName += " VS " + otherTown;
