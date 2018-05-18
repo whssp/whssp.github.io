@@ -28,6 +28,10 @@ header {
     font-size: 15vh;
 }
 
+#subParagraph {
+    font-size: 8vh;
+}
+
 img {
     display: flex;
     min-height: 100%;

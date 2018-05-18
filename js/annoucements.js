@@ -31,11 +31,13 @@ function updateArray() {
 async function execute() {
     let titleArray;
     let title = document.getElementById("titleHeader");
+    let subtitle = document.getElementById("subParagraph");
 
     titleArray = await updateArray();
 
     await loopTimeout(1, titleArray.length, 3 * 1000, function (i){
         title.innerText = titleArray[i][0];
+        subtitle.innerText = titleArray[i][1];
     });
 }
 
