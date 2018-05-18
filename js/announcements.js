@@ -13,7 +13,7 @@ function loadClient() {
         .then(function () {
                 updateArrays();
                 setInterval(cycleAnnouncements, 5 * 1000);
-                setInterval(updateArrays, 30 * 60 * 1000);
+                setInterval(updateArrays, 5 * 60 * 1000);
             },
             function (err) {
                 console.error("Error loading GAPI client for API", err);
@@ -50,8 +50,8 @@ function updateArrays() {
             }
 
             if (colANull && colBNull) continue;
-            if (colANull) titles.push("Title");
-            else if (colBNull) contents.push("Body");
+            if (colANull) titles.push("");
+            else if (colBNull) contents.push("");
         }
         cycleAnnouncements();
     },
@@ -69,6 +69,6 @@ function cycleAnnouncements() {
 }
 
 window.addEventListener("load", function() {
-   titleHeader = document.getElementById("titleHeader");
-   subParagraph = document.getElementById("subParagraph");
+   titleHeader = document.getElementById("announcementTitle");
+   subParagraph = document.getElementById("announcementBody");
 });
