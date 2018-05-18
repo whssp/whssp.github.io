@@ -8,12 +8,16 @@ let announcementIndex = 0;
 let apiKey = "AIzaSyCzjAj9QlD1P_eG_1HT7KqQjbfmfSDw-TU";
 
 function loadClient() {
-    gapi.client.setApiKey(apiKey).then(function(err) {
-        console.error("Error loadind GAPI client for API", err);
-    });
-
-    updateArrays();
-    setInterval(cycleAnnouncements(), 5 * 1000);
+    gapi.client.setApiKey(apiKey);
+    return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/sheets/v4/rest")
+        .then(function () {
+                updateArrays();
+                setInterval(cycleAnnouncements, 5 * 1000);
+                setInterval(updateArrays, 30 * 60 * 1000);
+            },
+            function (err) {
+                console.error("Error loading GAPI client for API", err);
+            });
 }
 
 function updateArrays() {
@@ -24,25 +28,32 @@ function updateArrays() {
         "majorDimension": "ROWS",
         "valueRenderOption": "FORMATTED_VALUE"
     }).then(function (response) {
-            titles = response[0];
-            contents = response[1];
-        },
+        titles = [];
+        contents = [];
+        for (let i = 1; i < response.result.values.length; i++) {
+            if (response.result.values[i][0] == null) {
+                titles.push("Title");
+            } else {
+                titles.push(response.result.values[i][0]);
+            }
+            if (response.result.values[i][1] == null) {
+                contents.push("Body");
+            } else {
+                contents.push(response.result.values[i][1]);
+            }
+        }
+    },
         function (err) {
             console.error("Execute error", err);
         });
 }
 
-async function execute() {
-    let titleArray;
-    let title = document.getElementById("titleHeader");
-    let subtitle = document.getElementById("subParagraph");
-
-    titleArray = await updateArrays();
-
-}
-
 function cycleAnnouncements() {
+    titleHeader.innerHTML = titles[announcementIndex];
+    subParagraph.innerHTML = contents[announcementIndex];
 
+    if (announcementIndex >= titles.length - 1) announcementIndex = 0;
+    else announcementIndex++;
 }
 
 window.addEventListener("load", function() {
