@@ -31,17 +31,29 @@ function updateArrays() {
         titles = [];
         contents = [];
         for (let i = 1; i < response.result.values.length; i++) {
-            if (response.result.values[i][0] == null) {
-                titles.push("Title");
+            let colA = response.result.values[i][0];
+            let colB = response.result.values[i][1];
+
+            let colANull = false;
+            let colBNull = false;
+
+            if (colA == null || colA === "") {
+                colANull = true;
             } else {
-                titles.push(response.result.values[i][0]);
+                titles.push(colA);
             }
-            if (response.result.values[i][1] == null) {
-                contents.push("Body");
+
+            if (colB == null || colB === "") {
+                colBNull = true;
             } else {
-                contents.push(response.result.values[i][1]);
+                contents.push(colB);
             }
+
+            if (colANull && colBNull) continue;
+            if (colANull) titles.push("Title");
+            else contents.push("Body");
         }
+        cycleAnnouncements();
     },
         function (err) {
             console.error("Execute error", err);
