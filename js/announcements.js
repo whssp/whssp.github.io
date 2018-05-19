@@ -51,7 +51,7 @@ function updateArrays() {
 
             if (colANull && colBNull) continue;
             if (colANull) titles.push("Title");
-            else contents.push("Body");
+            else if (colBNull) contents.push("Body");
         }
         cycleAnnouncements();
     },
