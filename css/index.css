@@ -2,7 +2,7 @@ body {
     height: 100vh;
     margin: 0;
     font-family: sans-serif;
-    -webkit-text-stroke-color: red;
+    -webkit-text-stroke-color: #d40000;
 }
 
 .leftText {
@@ -23,7 +23,7 @@ body {
 }
 
 #announcementTitle {
-    color: #191919;
+    color: black;
     font-family: sans-serif;
     vertical-align: bottom;
     margin: 5vh 2vh;

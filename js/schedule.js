@@ -349,7 +349,7 @@ function updateDate() {
             let calendar = JSON.parse(req.responseText);
             let events = calendar.items;
             for (let i = 0; i < events.length; i++) {
-                let summary = events[i].summary;
+                let summary = events[i]["summary"];
                 if (dayRegex.test(summary)) {
                     dayNum = summary.match(/\d+/)[0] - 1;
                     if (summary.indexOf("Half") !== -1) {
