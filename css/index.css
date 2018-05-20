@@ -2,7 +2,8 @@ body {
     height: 100vh;
     margin: 0;
     font-family: sans-serif;
-    -webkit-text-stroke-color: #d40000;
+    font-weight: normal;
+    -webkit-text-stroke-color: black;
 }
 
 .leftText {
@@ -35,6 +36,21 @@ body {
     margin: 5vh 2vh;
     font-size: 10vh;
 }
+
+.greenStroke{
+    font-weight: bold;
+    -webkit-text-stroke-width: 0.2vh;
+    -webkit-text-stroke-color: limegreen;
+    text-shadow: 0.1vh 0.1vh 0.5vh black
+}
+
+.redStroke{
+    font-weight: bold;
+    -webkit-text-stroke-width: 0.2vh;
+    -webkit-text-stroke-color: red;
+    text-shadow: 0.1vh 0.1vh 0.5vh black
+}
+
 
 img {
     display: flex;

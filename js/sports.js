@@ -124,23 +124,17 @@ function scrollScores() {
 
     // The winning score is bolded and outlined.
     if (homeScores[gameIndex] > otherScores[gameIndex]) {
-        score1.style.fontWeight = "bold";
-        score1.style.webkitTextStrokeWidth = "0.2vh";
+        score1.className = "greenStroke";
 
-        score2.style.fontWeight = "normal";
-        score2.style.webkitTextStrokeWidth = "0";
+        score2.className = "redStroke";
     } else if (otherScores[gameIndex] > homeScores[gameIndex]) {
-        score1.style.fontWeight = "normal";
-        score1.style.webkitTextStrokeWidth = "0";
+        score1.className = "redStroke";
 
-        score2.style.fontWeight = "bold";
-        score2.style.webkitTextStrokeWidth = "0.2vh";
+        score2.className = "greenStroke";
     } else {
-        score1.style.fontWeight = "normal";
-        score1.style.webkitTextStrokeWidth = "0";
+        score1.className = "";
 
-        score2.style.fontWeight = "normal";
-        score2.style.webkitTextStrokeWidth = "0";
+        score2.className = "";
     }
 
     // Wrap around to beginning of array if at the end.
