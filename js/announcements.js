@@ -120,8 +120,6 @@ function updateCalendarEvents() {
                 contents.push(summary + "<br>" + time);
             }
         }
-
-        console.log(events);
     });
 }
 
