@@ -8,6 +8,10 @@ let libraryContents = [];
 let calendarTitles = [];
 let calendarContents = [];
 
+let filledMain = false;
+let filledLibrary = false;
+let filledCalendar = false;
+
 let titles = [];
 let contents = [];
 let announcementIndex = 0;
@@ -54,6 +58,19 @@ function processError(err) {
     console.error("Execute error", err);
 }
 
+function finalize() {
+    if (filledMain && filledLibrary && filledCalendar) {
+        filledMain = false;
+        filledLibrary = false;
+        filledCalendar = false;
+
+        populateAnnouncements();
+        cycleAnnouncements();
+    } else {
+        setTimeout(finalize, 500);
+    }
+}
+
 function updateArrays() {
     titles = [];
     contents = [];
@@ -88,6 +105,7 @@ function updateArrays() {
             if (colANull) mainTitles.push("");
             else if (colBNull) mainContents.push("");
         }
+        filledMain = true;
     }, processError);
 
     if (showLibrary) {
@@ -120,16 +138,15 @@ function updateArrays() {
                 if (colANull && colBNull) continue;
                 if (colANull) libraryTitles.push("");
                 else if (colBNull) libraryContents.push("");
+
             }
+            filledLibrary = true;
         }, processError), 100);
     }
 
     updateCalendarEvents();
 
-    setTimeout(function() {
-        populateAnnouncements();
-        cycleAnnouncements();
-    }, 1000);
+    setTimeout(finalize, 500);
 }
 
 function updateCalendarEvents() {
@@ -188,6 +205,7 @@ function updateCalendarEvents() {
                 calendarContents.push(summary + "<br>" + time);
             }
         }
+        filledCalendar = true;
     });
 }
 
