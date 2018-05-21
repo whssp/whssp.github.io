@@ -151,6 +151,7 @@ window.addEventListener("load", function () {
         queryDict[item.split("=")[0]] = item.split("=")[1]
     });
 
+    if (queryDict["showlibrary"] === "true") showLibrary = true;
     if (queryDict["showLibrary"] === "true") showLibrary = true;
 
     titleHeader = document.getElementById("announcementTitle");
