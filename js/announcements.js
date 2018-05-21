@@ -37,7 +37,7 @@ function loadClient() {
             updateArrays();
             // Cycle the announcements every 5 seconds.
             setInterval(cycleAnnouncements, 5 * 1000);
-            // Update the announcements every 30 minutes.
+            // Update the announcements every 5 minutes.
             setInterval(updateArrays, 5 * 60 * 1000);
         },
         function (err) {
