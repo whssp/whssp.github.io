@@ -161,6 +161,8 @@ function updateArrays() {
             }
             filledLibrary = true;
         }, processError), 100);
+    } else {
+        filledLibrary = true;
     }
 
     // Retrieve calendar events from the public school calendar.
