@@ -1,6 +1,13 @@
 let titleHeader;
 let subParagraph;
 
+let mainTitles = [];
+let mainContents = [];
+let libraryTitles = [];
+let libraryContents = [];
+let calendarTitles = [];
+let calendarContents = [];
+
 let titles = [];
 let contents = [];
 let announcementIndex = 0;
@@ -24,58 +31,105 @@ function loadClient() {
             });
 }
 
-function processResults(response) {
-    titles = [];
-    contents = [];
-    for (let i = 1; i < response.result.values.length; i++) {
-        let colA = response.result.values[i][0];
-        let colB = response.result.values[i][1];
+function populateAnnouncements() {
+    titles = mainTitles;
+    contents = mainContents;
 
-        let colANull = false;
-        let colBNull = false;
-
-        if (colA == null || colA === "") {
-            colANull = true;
-        } else {
-            titles.push(colA);
-        }
-
-        if (colB == null || colB === "") {
-            colBNull = true;
-        } else {
-            contents.push(colB);
-        }
-
-        if (colANull && colBNull) continue;
-        if (colANull) titles.push("");
-        else if (colBNull) contents.push("");
+    if (showLibrary) {
+        titles = titles.concat(libraryTitles);
+        contents = contents.concat(libraryContents);
     }
-    cycleAnnouncements();
-    updateCalendarEvents();
-}
 
+    titles = titles.concat(calendarTitles);
+    contents = contents.concat(calendarContents);
+
+    mainTitles = [];
+    mainContents = [];
+    libraryTitles = [];
+    libraryContents = [];
+    calendarTitles = [];
+    calendarContents = [];
+}
 function processError(err) {
     console.error("Execute error", err);
 }
 
 function updateArrays() {
+    titles = [];
+    contents = [];
+
     gapi.client.sheets.spreadsheets.values.get({
         "spreadsheetId": "1Vlo2zrJM6Hz05T4_ux96p4EhaQVX9p_WJ0xMw3Lsj6s",
         "range": "A1:B",
         "dateTimeRenderOption": "FORMATTED_STRING",
         "majorDimension": "ROWS",
         "valueRenderOption": "FORMATTED_VALUE"
-    }).then(processResults, processError);
+    }).then(function (response) {
+        for (let i = 1; i < response.result.values.length; i++) {
+            let colA = response.result.values[i][0];
+            let colB = response.result.values[i][1];
+
+            let colANull = false;
+            let colBNull = false;
+
+            if (colA == null || colA === "") {
+                colANull = true;
+            } else {
+                mainTitles.push(colA);
+            }
+
+            if (colB == null || colB === "") {
+                colBNull = true;
+            } else {
+                mainContents.push(colB);
+            }
+
+            if (colANull && colBNull) continue;
+            if (colANull) mainTitles.push("");
+            else if (colBNull) mainContents.push("");
+        }
+    }, processError);
 
     if (showLibrary) {
-        gapi.client.sheets.spreadsheets.values.get({
+        setTimeout(gapi.client.sheets.spreadsheets.values.get({
             "spreadsheetId": "1Vlo2zrJM6Hz05T4_ux96p4EhaQVX9p_WJ0xMw3Lsj6s",
             "range": "'Library Announcements'!A1:B",
             "dateTimeRenderOption": "FORMATTED_STRING",
             "majorDimension": "ROWS",
             "valueRenderOption": "FORMATTED_VALUE"
-        }).then(processResults, processError);
+        }).then(function (response) {
+            for (let i = 1; i < response.result.values.length; i++) {
+                let colA = response.result.values[i][0];
+                let colB = response.result.values[i][1];
+
+                let colANull = false;
+                let colBNull = false;
+
+                if (colA == null || colA === "") {
+                    colANull = true;
+                } else {
+                    libraryTitles.push(colA);
+                }
+
+                if (colB == null || colB === "") {
+                    colBNull = true;
+                } else {
+                    libraryContents.push(colB);
+                }
+
+                if (colANull && colBNull) continue;
+                if (colANull) libraryTitles.push("");
+                else if (colBNull) libraryContents.push("");
+            }
+        }, processError), 100);
     }
+
+    updateCalendarEvents();
+
+    setTimeout(function() {
+        populateAnnouncements();
+        cycleAnnouncements();
+    }, 1000);
 }
 
 function updateCalendarEvents() {
@@ -130,14 +184,19 @@ function updateCalendarEvents() {
                     time = "";
                 }
 
-                titles.push("Today's Events:");
-                contents.push(summary + "<br>" + time);
+                calendarTitles.push("Today's Events:");
+                calendarContents.push(summary + "<br>" + time);
             }
         }
     });
 }
 
 function cycleAnnouncements() {
+    if (mainTitles.length !== 0 || mainContents.length !== 0
+    || libraryTitles.length !== 0 || libraryContents.length !== 0
+    || calendarTitles.length !== 0 || calendarContents.length !== 0) {
+        populateAnnouncements();
+    }
     titleHeader.innerHTML = titles[announcementIndex];
     subParagraph.innerHTML = contents[announcementIndex];
 
