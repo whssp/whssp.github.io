@@ -4,6 +4,7 @@ let subParagraph;
 let titles = [];
 let contents = [];
 let announcementIndex = 0;
+let showLibrary = false;
 
 const API_KEY = "AIzaSyCzjAj9QlD1P_eG_1HT7KqQjbfmfSDw-TU";
 const DISCOVERY_DOCS = ["https://content.googleapis.com/discovery/v1/apis/sheets/v4/rest", "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -23,45 +24,58 @@ function loadClient() {
             });
 }
 
+function processResults(response) {
+    titles = [];
+    contents = [];
+    for (let i = 1; i < response.result.values.length; i++) {
+        let colA = response.result.values[i][0];
+        let colB = response.result.values[i][1];
+
+        let colANull = false;
+        let colBNull = false;
+
+        if (colA == null || colA === "") {
+            colANull = true;
+        } else {
+            titles.push(colA);
+        }
+
+        if (colB == null || colB === "") {
+            colBNull = true;
+        } else {
+            contents.push(colB);
+        }
+
+        if (colANull && colBNull) continue;
+        if (colANull) titles.push("");
+        else if (colBNull) contents.push("");
+    }
+    cycleAnnouncements();
+    updateCalendarEvents();
+}
+
+function processError(err) {
+    console.error("Execute error", err);
+}
+
 function updateArrays() {
-    return gapi.client.sheets.spreadsheets.values.get({
+    gapi.client.sheets.spreadsheets.values.get({
         "spreadsheetId": "1Vlo2zrJM6Hz05T4_ux96p4EhaQVX9p_WJ0xMw3Lsj6s",
         "range": "A1:B",
         "dateTimeRenderOption": "FORMATTED_STRING",
         "majorDimension": "ROWS",
         "valueRenderOption": "FORMATTED_VALUE"
-    }).then(function (response) {
-            titles = [];
-            contents = [];
-            for (let i = 1; i < response.result.values.length; i++) {
-                let colA = response.result.values[i][0];
-                let colB = response.result.values[i][1];
+    }).then(processResults, processError);
 
-                let colANull = false;
-                let colBNull = false;
-
-                if (colA == null || colA === "") {
-                    colANull = true;
-                } else {
-                    titles.push(colA);
-                }
-
-                if (colB == null || colB === "") {
-                    colBNull = true;
-                } else {
-                    contents.push(colB);
-                }
-
-                if (colANull && colBNull) continue;
-                if (colANull) titles.push("");
-                else if (colBNull) contents.push("");
-            }
-            cycleAnnouncements();
-            updateCalendarEvents();
-        },
-        function (err) {
-            console.error("Execute error", err);
-        });
+    if (showLibrary) {
+        gapi.client.sheets.spreadsheets.values.get({
+            "spreadsheetId": "1Vlo2zrJM6Hz05T4_ux96p4EhaQVX9p_WJ0xMw3Lsj6s",
+            "range": "'Library Announcements'!A1:B",
+            "dateTimeRenderOption": "FORMATTED_STRING",
+            "majorDimension": "ROWS",
+            "valueRenderOption": "FORMATTED_VALUE"
+        }).then(processResults, processError);
+    }
 }
 
 function updateCalendarEvents() {
@@ -132,6 +146,13 @@ function cycleAnnouncements() {
 }
 
 window.addEventListener("load", function () {
+    let queryDict = {};
+    location.search.substr(1).split("&").forEach(function (item) {
+        queryDict[item.split("=")[0]] = item.split("=")[1]
+    });
+
+    if (queryDict["showLibrary"] === "true") showLibrary = true;
+
     titleHeader = document.getElementById("announcementTitle");
     subParagraph = document.getElementById("announcementBody");
 });

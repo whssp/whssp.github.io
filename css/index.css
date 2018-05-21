@@ -25,16 +25,16 @@ body {
 
 #announcementTitle {
     color: black;
-    font-family: sans-serif;
+    font-weight: bold;
     vertical-align: bottom;
     margin: 5vh 2vh;
-    font-size: 15vh;
+    font-size: 10.5vh;
 }
 
 #announcementBody {
     color: #363636;
     margin: 5vh 2vh;
-    font-size: 10vh;
+    font-size: 9vh;
 }
 
 .greenStroke{
