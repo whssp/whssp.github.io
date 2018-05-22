@@ -47,6 +47,10 @@ function loadClient() {
 
 // Fill the final announcement arrays.
 function populateAnnouncements() {
+    // Reset to avoid holdovers.
+    titles = [];
+    contents = [];
+
     // We fill in the order Main, [Library], Calendar.
     titles = mainTitles;
     contents = mainContents;
@@ -88,10 +92,6 @@ function finalize() {
 
 // Fill the announcement data arrays.
 function updateArrays() {
-    // Reset to avoid holdovers.
-    titles = [];
-    contents = [];
-
     // Retrieve the main announcements from the spreadsheet.
     gapi.client.sheets.spreadsheets.values.get({
         "spreadsheetId": "1Vlo2zrJM6Hz05T4_ux96p4EhaQVX9p_WJ0xMw3Lsj6s",
