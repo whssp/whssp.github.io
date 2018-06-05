@@ -51,6 +51,15 @@ function removeTrailingSpaces(str) {
     return str;
 }
 
+// Counts the number of words in a string.
+function wordCount(str) {
+    let count = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (str.charAt(i) === " ") count++;
+    }
+    // First space means two words.
+    return count++;
+}
 // Extracts information from tweet array and populates game data arrays.
 function updateScores() {
     if (tweets.length === 0) return;
@@ -90,9 +99,9 @@ function updateScores() {
             let score1 = match1.substr(match1.lastIndexOf(" ") + 1);
             let score2 = match2.substr(match2.lastIndexOf(" ") + 1);
 
-            let town1 = match1.substr(0, match1.indexOf(score1) - 1);
-            let town2 = match2.substr(0, match2.indexOf(score2) - 1);
-
+            let town1 = removeTrailingSpaces(match1.substr(0, match1.indexOf(score1) - 1));
+            let town2 = removeTrailingSpaces(match2.substr(0, match2.indexOf(score2) - 1));
+            if (wordCount(town1) > 2 || wordCount(town2) > 2) continue;
             // Determine which score is ours and which is the other town.
             let otherTown;
             if (town1 === "Wellesley") {
