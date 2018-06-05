@@ -1,9 +1,19 @@
 body {
-    height: 100vh;
+    /*-webkit-transform:scale(0.75,1); !* Safari and Chrome *!*/
+    /*-moz-transform:scale(0.75,1); !* Firefox *!*/
+    /*-ms-transform:scale(0.75,1); !* IE 9 *!*/
+    /*-o-transform:scale(0.75,1); !* Opera *!*/
+    /*transform:scale(0.75,1); !* W3C *!*/
+    /*transform-origin: left;*/
     margin: 0;
     font-family: sans-serif;
     font-weight: normal;
     -webkit-text-stroke-color: black;
+    overflow: hidden;
+}
+
+#all {
+    height: 100vh;
 }
 
 .leftText {
